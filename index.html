@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Q viewer</title>
+  <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+  <script src="lib/vue.js"></script>
+  <!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="libcss/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="libcss/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>  
+<div id="app-1" class="container-fluid">
+  <H2>Q viewer</H2>
+  <!-- Sura dropdown   -->
+  Sura #: &nbsp;
+  <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
+    <option v-for="sura in 114" v-bind:value="sura">
+	  {{ sura }}
+    </option>
+  </select>
+
+<!-- Ayah dropdown -->
+<!-- <select vbind="currentAyah" @@change="onChange('ayah')"> -->
+  <!-- <option v-for="ayah in ayahsCount" vbind:value="ayah"> -->
+	<!-- {{ ayah }} -->
+  <!-- </option> -->
+<!-- </select> -->
+
+  <!-- Page dropdown -->
+  &nbsp;
+  <button :disabled="queryData.page === 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">&lt;</button>
+  Page: 
+  <select v-model="queryData.page" @change="onChange('page')">
+    <option v-for="page in 604" v-bind:value="page">
+	  {{ page }}
+    </option>
+  </select>
+  <button :disabled="queryData.page === 604" @click="queryData.page = queryData.page >= 604 ? 604 : queryData.page + 1; onChange('page');">&gt;</button>
+  &nbsp;
+  
+
+  Search: <input v-model="keyword" placeholder="Enter search string here..." type=text />
+  <button v-on:click="go">Go</button>  {{keyword}} 
+  <input type=checkbox v-model="showTrans" click="showTrans = !showTrans" title="show translation" />Translation
+  <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
+  <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab" title="show Asbab (Sababun Nuzul)" />Asbab
+  <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms" title="show transliteration" />Synonyms
+  <span v-if='isLoading'>
+	<ul class="fa-ul">
+		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
+	</ul>
+	<!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> -->
+	<!-- <span class="sr-only">Loading...</span> -->
+  </span>{{message}}
+
+  <HR>
+  <div>
+	<div v-if="ayahsListFromPage">
+		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
+		<div style="overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
+			<div v-for="(verse, verseIndex) in ayahsListFromPage">
+				
+				<span v-for="(ayah, prop, ayahindex) in getVerse(verse.verseNo)">
+					<div dir=rtl v-if="prop == 'BUCK'" dir="rtl" >
+						<span style=font-size:1em >{{ verse.surah }}:{{ verse.ayah }} &nbsp; </span>
+						<span style=direction:rtl;font-size:2.35em >{{ayah}}</span>
+						<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
+							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah)" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
+								<!-- [A] -->
+								<span style="cursor:pointer" class="label label-warning" >ASBAB</span>
+							</A>
+							
+						</span>
+						<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+							<A HREF="#" @click="showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
+								<!-- [S] -->
+								<span style="cursor:pointer" class="label label-info" >SYNMS</span>
+							</A> &nbsp; &nbsp;<BR>
+							<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+								<span v-for="item in first">
+									<A HREF="#" @click="showSynonymsFor(item, verse.surah, verse.ayah)">
+										<span class="label label-success">
+											{{item.n}}<span class="badge">{{ getSynonymsDetailsFor(item, verse.surah, verse.ayah).words.length }}</span>
+										</span>
+									</A>&nbsp; &nbsp;
+									<!--<span v-for="word in getSynonymsDetailsFor(item, verse.surah, verse.ayah).words">
+										<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	<!--
+										<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+											<span class="label label-info" :title="word.word">
+												{{word.wordEn}}
+											</span>
+										</A>&nbsp;
+									</span>-->
+								</span>
+							</span>
+							
+						</span>
+					</div>
+					<span v-else-if="prop == 'BARE'" v-html="">	</span>
+					<span v-else-if="prop == 'TRANS'" >
+						<div v-if="showTrans">{{ ayah }}</div>
+					</span>
+					<span v-else-if="prop == 'TRANSLIT'" >
+						<div v-if="showTranslit" v-html="ayah"></div>
+					</span>
+					<span v-else>
+						{{ayah}} 
+					</span>
+				</span>	<BR>
+			</div>
+		</div>
+		<button v-show="queryData.page !== 604" @click="queryData.page = queryData.page >= 604 ? 604 : queryData.page + 1; onChange('page');">Next page</button>
+	</div>
+</div>
+
+<div v-if="showAsbabDetail">
+	<BR/>
+	Sabab Nuzul details for selected Ayah:<BR>
+	<PRE>{{asbabDetail}}</PRE>
+	<BR/>
+</div>
+
+<div v-if="showSynonymsDetail">
+	<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
+	Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
+	<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
+	
+	<span v-for="word in synonymsDetail.words">
+		<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+		<span class="label label-info" :title="word.word">
+			{{word.wordEn}}
+		</span>
+	</A>&nbsp;
+	</span>
+					
+	<!-- 16:9 aspect ratio -->
+	<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+	  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
+	<!-- </div>					 -->
+	<!-- 4:3 aspect ratio -->
+	<div class="embed-responsive embed-responsive-4by3">
+	  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+	</div>
+	<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
+	<BR/>
+</div>
+
+
+<!--<span XXv-bind:style="!ayah.scoreVerb || ayah.scoreVerb < 0 ? 'color:lightgray' : ayah.scoreVerb <= 15 ? 'color:YellowGreen' : 'color:brown' " 
+				   vbind:style="'opacity:' + (!ayah.scoreVerb || ayah.scoreVerb < 0 ? '0.2' : ayah.scoreVerb <= 15 ? '0.5' : '1') " 
+				   vbind:title="JSON.stringify(ayah).split(',').join('\n')">
+-->				   
+  <!-- <HR> -->
+  <!-- {{ayahsListFromPage}} -->
+  <!-- <HR> -->
+
+  <div v-if="rootLemResults && rootLemResults.length > 0">
+	  <HR>Dictionary lookup results: <BR>
+	  <!-- {{ rootLemResults }} -->
+	  ROOT:{{rootLemResults.length > 0 ? rootLemResults[0].root : '-'}}, Instances: {{rootLemResults.length > 0 ? rootLemResults[0].rootInstances : '-'}}
+	  <div v-for="(match, key, index) in rootLemResults">
+		<A href=# @click='goRootToLem(match, key, index);' v-bind:title='match.verse'>
+			LEM:{{match.lem}}
+		</A>, Instances: {{match.lemInstances}}
+	  </div>
+	  <HR>
+  </div>
+  
+  <div v-if="lemResults && Object.keys(lemResults).length > 0">
+	<HR>Dictionary Lemma lookup results: {{ Object.keys(lemResults).length}}<BR>
+		<!-- {{ lemResults }} -->
+		
+		<div v-if="lemResults && Object.keys(lemResults).length > 0" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+			<div v-for="(match, key, index) in lemResults">
+				<A href=# @click='goLem(match, key, index);' v-bind:title='match.verse'>
+					{{match.surah}}:{{match.ayah}}:{{match.word}}
+				</A>
+				{{match.snippet.substring(0,100)}}
+			</div>
+		</div>
+	 <HR>
+  </div>
+  
+  <div v-if="searchResults && Object.keys(searchResults).length > 0">
+	  <HR>Search results: <BR>
+	  <div v-for="(matches, key, index) in searchResults">
+		<div v-if="key !== 'keyword'">
+			<BR>
+			{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
+			<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+				<div v-for="match in matches">
+					<!-- {{match}} -->
+					<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
+						{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
+					</A>
+					{{ match.split('|')[2] }}
+				</div>
+			</div>
+			<BR>
+		</div>
+	  </div>
+	  <HR>
+  </div>
+  
+ <BR>
+  <DIV v-show="debug">
+	  {{queryData}}
+	  {{ref}}
+	  Asbab: {{currentPageAsbab}}
+	  Synonyms: {{currentPageSynonyms}}
+	  <!-- <PRE> -->
+		<!-- {{asbabDetail}} -->
+	  <!-- </PRE> -->
+  </DIV>
+
+  
+</div>
+
+<script>
+var vm = new Vue({
+  el: '#app-1',
+  data: {
+	sura:1,
+	page:1,
+	keyword: 'LEM:{som',//null,
+	searchResults: {},
+	rootLemResults: {},
+	lemResults: {},
+	
+	isLoading: true,
+	message: '',
+	debug: false,
+	showArabic: true,
+	showTrans: false,
+	showTranslit: false,
+	showAsbab: true,
+	showSynonyms: false,
+	currentPageAsbab: [],
+	showAsbabDetail: false,
+	asbabDetail: "",
+	currentPageSynonyms: [],
+	showSynonymsDetail: false,
+	synonymsDetail: "",
+	_: { find:function(){} },
+	currentPageSynonymsDetails: [],
+	
+	currentVerse: 1,
+	queryData: {sura: 0, ayah: 0, word: 0, page: 0},
+	ayahsCount: 7,
+	ayahsListFromPage: [{sura: 1, ayah: 1, verse: 1}],
+	
+    S: [],
+	corpus: {},
+	suras: [],
+	//currentSura: 44, //'1. Al-Faatiha',
+	//currentAyah: 58,
+	//page: 1,
+  },
+  
+  computed: {
+	ref: function(){
+		return this.queryData.sura +':'+ this.queryData.ayah; // + this.queryData.word ? ':'+ this.queryData.word : '';
+	},
+	ayahs: function(){
+		return [ this.currentSura ]; //_.range(1, 11); //this.currentSura
+	},
+	currentSura: {
+		get: function(){
+			return 1; //typeof(Q)==='undefined' || !Q? 1 : Q.ayah.fromVerse( this.currentVerse ).surah;
+		},
+		set: function(val){
+			this.currentVerse = 1; //typeof(Q)==='undefined' || !Q? 1 : Q.verseNo.surah(val);
+		}
+	},
+	currentAyah: {
+		get: function(){
+			return 1; //Q.ayah.fromVerse( this.currentVerse ).ayah;
+		},
+		set: function(val){
+			this.currentVerse = 1; //Q.verseNo.ayah(this.currentSura, val);
+		}
+	},
+	currentPage: {
+		get: function(){
+			return 1; //Q.ayah.page(this.currentSura, this.currentAyah);
+		},
+		set: function(val){debugger;
+			var o = {surah: 1, ayah: 1}; //Q.ayah.fromPage(val);
+			this.queryData.sura = o.surah;
+			this.queryData.ayah = o.ayah;
+		}
+	},
+	page: function(){
+		return this.queryData.page;
+	},
+	<!-- ayahsListFromPage: function(){ -->
+		<!-- return Q.ayah.listFromPage(this.currentPage); -->
+	<!-- }, -->
+	//getCorpus: function(){	
+	//}
+  },
+  
+  methods: {
+    go: function () {
+      var keyword = vm.keyword;
+	  //vm.searchResults = qSearch.search(keyword);
+    },
+	goLem: function(match, key, index){},
+	getCorpus: function(sura, ayah){
+		return qCorpus.parseEx( S[ayah] );
+	},
+	getVerse: function(){},
+	onChange: function(){},
+	//applyAsbab: function(){},
+	showAsbabFor: function(){},
+	showSynonymsFor: function(){},
+	getSynonymsDetailsFor: function(){},
+  },
+  
+  watch: {	
+	ref: function(newRef){
+		console.log('WATCH::ref ' + this.ref +' '+ newRef);
+		this.queryData.page = Q.ayah.page( this.queryData.sura, this.queryData.ayah);
+		//this.onChange('page');
+		//this.corpus = qCorpus.parseEx( S[ this.currentAyah] ); //TODO: reload S if currentSura has changed
+		//this.page = Q.ayah.page(this.currentSura, this.currentAyah);
+	},
+	
+	page: function(newPage){
+		console.log('WATCH::page ' + this.page +' '+ newPage); //debugger;
+		vm.goPage(newPage);
+	}
+  }
+})
+</script>
+
+
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script> -->
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script> -->
+  <script src="lib/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+  <script src="zdata/libcss/bootstrap-3.3.7-dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src='lib/lodash.min.js'></script>
+  <script src='lib/moment.min.js'></script>
+  <!-- <script src="lib/underscore-min.js"></script> -->
+  <script src='zdata/main.js'></script>
+  
+  <script>
+	if(qMain){
+		qMain.init('http://localhost:8080/', 'zdata/');
+		qMain.go(function(){
+			vm.isLoading = false;
+			vm && vm.go();
+		});
+		var showAr = true;
+		if(vm){
+			vm._ = _;
+			//vm.go();
+			
+			vm.suras = []; 
+			
+			onChangeSura = function(vm){
+				vm.queryData.page = Q.ayah.page(vm.queryData.sura, vm.queryData.ayah ? vm.queryData.ayah : 1);
+//				vm.ayahsListFromPage = Q.ayah.listFromPage( vm.queryData.page );
+//				vm.ayahsCount = Q.surah.detail( vm.queryData.sura ).ayahs;
+				vm.goPage(vm.queryData.page);
+			}
+			
+			vm.$watch(/*'queryData.sura'*/ 'ref', function(newVal, oldVal){
+				onChangeSura(this);
+			});
+			
+			vm.getVerse = function(verseNo){
+				var result = typeof(qSearch) !== 'undefined' && qSearch.lookup(verseNo); 
+				if(result){
+					result.BUCK = showAr ? qUtil.EnToAr(result.BUCK) : result.BUCK;
+					result.TRANS = !result.TRANS ? '' : result.TRANS.split('|')[2];
+					result.TRANSLIT = !result.TRANSLIT ? '' : result.TRANSLIT.split('|')[2];
+				}
+				return result;
+			};
+			
+			vm.onChange = function(evtSource){//debugger;
+				console.log('onChange::' +evtSource +' ' );
+				switch(evtSource){
+					case 'sura':
+						onChangeSura(this);
+						/*this.ayahsListFromPage = Q.ayah.listFromSurah( this.queryData.sura );
+						this.ayahsCount = Q.surah.detail( this.queryData.sura ).ayahs;
+						this.queryData.ayah = 1;*/
+						break;
+					
+					case 'ayah':
+						debugger;
+						break;
+					
+					case 'page':
+						this.goPage(this.queryData.page);
+						break;
+					
+					default:
+						break;
+				}
+			}
+	
+			vm.goPage = function(page){
+				this.ayahsListFromPage = Q.ayah.listFromPage(page);
+				//this.queryData.sura = _.first(this.ayahsListFromPage).surah;
+				//this.queryData.ayah = _.first(this.ayahsListFromPage).ayah;
+				
+				//now find out if any Asbab for this page as an async call
+				if(vm.showAsbab) 
+				qAsbab.findForPageAsync( page )
+					  .then(function(data){
+						vm.currentPageAsbab = (data || '').split(' ');
+				});
+				
+				//now find out if any Asbab for this page as an async call
+				if(vm.showSynonyms)
+				qSynonyms.findForPageAsync( page )
+					  .then(function(data){
+						vm.currentPageSynonyms = (data || []);
+						currentPageSynonymsDetails = [];
+				});
+				
+			}
+			
+			vm.goSearchResult = function(match){ //single string like this 5|12|sdfsfs fsdfsdfs
+				var tmp = match ? match.split('|') : ['-', '-', '-'];
+				vm.keyword = tmp[0] +':'+ tmp[1]+':'+1;
+				vm.go();
+			}
+			
+			vm.goRootToLem = function(match, key, index){
+				vm.keyword = 'LEM:' + match.lem;
+				vm.go();
+			}
+			
+			
+			vm.goLem = function(match, key, index){
+				vm.keyword = [match.surah, match.ayah, match.word].join(':');
+				vm.go();
+			}
+	
+			
+			vm.go = function () {
+			  var keyword = vm.keyword.trim(); //this will break IE compat; needs polyfill
+			  var regEx = new RegExp(/^(\d*)\:(\d*)(?:(?:\:(\d*))?)$/);
+			  if( regEx.test(keyword) ){
+				var temp = keyword.match(regEx); // /(\d*)\:(\d*)\:(\d*)/),
+					loc ={sura: +temp[1], ayah: +temp[2], word: temp.length >= 3 ? +temp[3] : null };
+				vm.queryData.ayah = loc.ayah; //also change numAyahs
+				vm.queryData.sura = loc.sura;
+				//vm.queryData.page = Q.ayah.page(loc.surah, loc.ayah);	
+				//vm.onChange('page');
+			  }
+			  else if(keyword.indexOf('LEM:') != -1){
+				//potential Lemma search
+				var pattern = keyword,				
+					//pattern = 'LEM:tasomiyap', //'LEM:m~usam~FY|ROOT:smw', //'LEM:sam~aY`|ROOT:smw'; //'ROOT:smw'; //'LEM:r~aHiym|ROOT:rHm';
+
+					results = [];
+				_.chain(gq.Q)
+				 .each(function(c, index){
+					var temp, cummLength = 0;
+					//return (temp = c.indexOf(pattern)) != -1 ? [index, temp, c] : null;
+					temp = c.split(pattern);
+					if(temp.length > 1){
+					//else if(temp.length == 2){ ret = [index, temp[0].length, c] }
+//					else{	//ret = [];
+						temp.forEach(function(item, indexTemp){
+							if(indexTemp < temp.length-1){
+								cummLength += (indexTemp==0 ? 0 : pattern.length);
+								results.push([index, (cummLength += temp[indexTemp].length), c]);
+							}
+						});
+					}
+					//return ret;
+				  })
+				  .value();
+				  results = 
+					_.chain(results)
+					 .filter()
+					 .map(function(row, index){ 
+						var verseNo = row[0],
+							patternLoc = row[1],
+							verse = row[2],
+							snippet = verse.substring(0, patternLoc),
+							o = Q.ayah.fromVerse( verseNo ),
+							wordNo = ( snippet.split('★') || []).length;
+						return _.extend(o, {word: wordNo, patternLoc: patternLoc, snippet: snippet, verse: verse});
+					 })
+					 //.tap(console.table)
+					 .value();
+				vm.lemResults = results;
+				
+			  }
+			  else if(keyword.indexOf('ROOT:') != -1 || keyword.length === 3){
+				//potential Root Lem search...
+				var query = { root: keyword.replace('ROOT:', '') };
+				var o = typeof(qRootLemDict) !== 'undefined' && qRootLemDict.lookup(query);
+				o = o && _.map(o.lems, function(lem, index){
+					return {root: o.root, lem: lem, lemInstances: o.lemsInstances[index], rootInstances: o.rootInstances};
+				});
+				vm.rootLemResults = o;	
+			  }
+			  else{
+				var startTime, endTime, message = '';
+				  //vm.searchResults = qSearch.search(keyword);
+				//console.log((message = 'Searching...' /*(startTime = new moment()) +' request fired. '*/) );
+				vm.isLoading = true;
+				//vm.message = message;
+				qSearch.searchAsync(keyword).then(function(results){
+					vm.isLoading = false;
+					vm.searchResults = results;
+					console.log((vm.message += ((endTime = new moment()) +' results received') ) );
+					vm.message = 'Search time: ' + endTime.diff(startTime, 'seconds') + ' seconds. (' + (endTime - startTime) + ' ms.) ';//moment(startTime).fromNow() + ' ' + vm.message;
+				});
+			  }
+
+			}
+		}
+		
+		vm.showAsbabFor = function(sura, ayah){
+			var lookup = qAsbab.get(sura, ayah);
+			vm.showAsbabDetail = true;
+			vm.asbabDetail = lookup;
+			console.log( lookup );
+		}
+				
+		vm.showSynonymsFor = function(item, sura, ayah){
+			var details = vm.getSynonymsDetailsFor(item, sura, ayah);
+			vm.showSynonymsDetail = true;
+			vm.synonymsDetail = details;
+		}
+		
+		vm.getSynonymsDetailsFor = function(item, sura, ayah){
+			var key = sura + ':' + ayah;
+			var name = item.n,
+				topicId = item.t,
+				topicUrl = item.u;
+			var lookup = qSynonyms.get(topicId);
+			return {
+				name: name,
+				topicId: topicId,
+				topicUrl: topicUrl,
+				words: lookup,
+				ref: key,
+			};
+		}
+		
+		vm.keyword = '1:1'; //'LEM:{som';
+		//vm.go();
+		if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
+	}
+  </script>
+</body>
+
+</html>
