@@ -25,8 +25,8 @@ var qMain = (function(){
 			function(key, data){ qSearch.setData(key, data); },
 			function(key, data){ qSearch.setData(key, data); },
 			function(key, data){ qSearch.setData(key, data); },
-			function(key, data){ qSynonyms.setData(data); },
-			function(key, data){ qAsbab.setData(data); },
+			function(key, data){ qSynonyms.setData(data); /* Intentionally not caching */ },
+			function(key, data){ qSearch.setData(key, data); qAsbab.setData(data); },
 		],
 		
 		scripts = [
