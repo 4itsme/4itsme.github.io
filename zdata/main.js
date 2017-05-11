@@ -81,6 +81,9 @@ var qMain = (function(){
 		init = function(serverPath, dataPath){
 			_serverPath = serverPath;
 			if(dataPath){ _dataPath = dataPath; }
+			if(typeof(qSearch) !== 'undefined' && qSearch){
+				qSearch.init(_serverPath, _dataPath);
+			}
 		},
 		
 		
@@ -88,6 +91,7 @@ var qMain = (function(){
 			$getMultiScripts(scripts, _serverPath + _dataPath).done(function() {
 				// all scripts loaded
 				console.log( 'all scripts downloaded' );
+				qSearch.init(_serverPath, _dataPath);
 				///vm.go();
 				
 				/*if(!_serverPath || _serverPath === ''){

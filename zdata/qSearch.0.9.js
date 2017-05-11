@@ -40,7 +40,7 @@ var qSearch = (function(){
 		return result;
 	}
 	
-	function init(){
+	function init(serverPath, dataPath){
 		if(isInited){ return; }
 		var filesKey = [
 			 'BUCK'
@@ -53,14 +53,14 @@ var qSearch = (function(){
 				 repo[ key ].final = prepareData(key, repo[key].raw );
 			}
 		});
-		initCorpus();
+		initCorpus(serverPath, dataPath);
 		isInited = true;
 	}
 	
-	function initCorpus(){
+	function initCorpus(serverPath, dataPath){
 		window.gq = window.gq || {cookdata: function(){} };
-		var _serverPath = 'http://localhost:8080/',
-			_dataPath = 'zdata/',
+		var _serverPath = serverPath ? serverPath : 'http://localhost:8080/',
+			_dataPath = dataPath ? dataPath : 'zdata/',
 			scripts = ['manzil1,7.js', 'manzil5,6.js', 'manzil2,3,4.js'];
 		$getMultiScripts(scripts, _serverPath + _dataPath).done(function() {
 			// all scripts loaded
