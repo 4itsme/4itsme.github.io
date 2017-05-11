@@ -109,6 +109,7 @@ var qMain = (function(){
 					var dataScripts = [];
 					_.each(_.range(0, files.length), function(i){
 						if(qSearch.getData( filesKey[i] ) && qSearch.getData( filesKey[i] ).length){
+							if('ASBAB' === filesKey[i]){ qAsbab.setData( qSearch.getData( filesKey[i] ) ); }
 							return; //if already cached in localstorage, dont redownload
 						}
 						dataScripts.push( files[i].replace(/\.txt/g, '.js') );

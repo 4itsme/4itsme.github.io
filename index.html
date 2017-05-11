@@ -17,11 +17,20 @@
   <H2>Q viewer</H2>
   <!-- Sura dropdown   -->
   Sura #: &nbsp;
-  <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
-    <option v-for="sura in 114" v-bind:value="sura">
-	  {{ sura }}
-    </option>
-  </select>
+  <span v-if="suras && suras.length > 0">
+    <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
+      <option v-for="sura in suras" v-bind:value="sura.value">
+	    {{ sura.name }}
+      </option>
+    </select>
+  </span>
+  <span v-else="">
+	  <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
+		<option v-for="sura in 114" v-bind:value="sura">
+		  {{ sura }}
+		</option>
+	  </select>
+  </span>
 
 <!-- Ayah dropdown -->
 <!-- <select vbind="currentAyah" @@change="onChange('ayah')"> -->
@@ -360,10 +369,18 @@ var vm = new Vue({
 		var showAr = true;
 		if(vm){
 			vm._ = _;
-			//vm.go();
 			
-			vm.suras = []; 
-			
+			vm.suras = 
+				_.chain( _.range(1, 115) )
+				 .map( function(s){
+					 var det = Q.surah.detail( s );
+					return _.extend( det, { 
+											name: s + '. ' + det.english_name +'  '+ det.arabic_name,
+											value: s
+										  } );
+				  })
+
+			 
 			onChangeSura = function(vm){
 				vm.queryData.page = Q.ayah.page(vm.queryData.sura, vm.queryData.ayah ? vm.queryData.ayah : 1);
 //				vm.ayahsListFromPage = Q.ayah.listFromPage( vm.queryData.page );
