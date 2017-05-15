@@ -1,7 +1,14 @@
 var qSarf = (function(){
-	var publicApi = {};
+	var publicApi = {},
+		repo = {raw: null, final: null};
 	
-	var SARF_SAGHEER = [ //'Verbs_VerbNo,Verbs_Words_Corpus_Root_English,Verbs_Type,Verbs_class,Verbs_Sura,Verbs_Verse,Meaning-English,Meaning-Urdu,Count,perfect,Imperfect,Imperative,Active-participle,Passive-participle,Verbal-noun,root,type,class',
+	var SARF_SAGHEER_HEADER = 'Verbs_VerbNo,Verbs_Words_Corpus_Root_English,Verbs_Type,Verbs_class,Verbs_Sura,Verbs_Verse,Meaning-English,Meaning-Urdu,Count,perfect,Imperfect,Imperative,Active-participle,Passive-participle,Verbal-noun,root,type,class',
+		SARF_SAGHEER_KEYS = 'no, root, verbs_type, verbs_class, sura, verse, en, ur, count, perfect, imperfect, imperative, acct-pcpl, pass-pcpl, vn, rootAr, type, class',
+		SARF_SAGHEER_KEYS_ARRAY = SARF_SAGHEER_KEYS.split(', '),
+
+		REGEX_SARF_KEYS_SPLIT = /(?!\B"[^"]*),(?![^"]*"\B)/,
+		
+		SARF_SAGHEER = [ //'Verbs_VerbNo,Verbs_Words_Corpus_Root_English,Verbs_Type,Verbs_class,Verbs_Sura,Verbs_Verse,Meaning-English,Meaning-Urdu,Count,perfect,Imperfect,Imperative,Active-participle,Passive-participle,Verbal-noun,root,type,class',
 '1,fEl,b1,فتح,2,24,to do,كرنا ,105,فَعَلَ, يَفْعَلُ, اِفْعَلْ , فَاعِل, مَفْعُول, فِعْل,ف ع ل ,1,فتح',
 '2,ftH,b1,فتح,2,76,"to open, to give victory",کھولنا,29,فَتَحَ, يَفْتَحُ, اِفْتَحْ, فَاتِح, مَفْتُوح, فَتْح,ف ت ح ,1,فتح',
 '3,bEv,b1,فتح,2,56,to raise; to resurrect, پہنچا نا,65,بَعَثَ, يَبْعَثُ, اِبْعَثْ, بَاعِث, مَبْعُوث, بَعْث,ب ع ث ,1,فتح',
@@ -210,11 +217,27 @@ var qSarf = (function(){
 '204,TwE,d10,اِسْتَغْفَرَ,2,217,to be able to,كرسكنا,42,اِسْتَطَاعَ, يَسْتَطِيعُ, اِسْتَطِعْ, مُسْتَطِيع, مُسْتَطَاع, اِسْتِطَاعَة,ط و ع,10,اِسْتَغْفَرَ',
 '205,qwm,d10,اِسْتَغْفَرَ,1,6,to be straight;  to act straight,ثابت قدم رهنا,47,اِسْتَقَامَ, يَسْتَقِيمُ, اِسْتَقِمْ, مُسْتَقِيم, -, اِسْتِقَامَة,ق و م,10,اِسْتَغْفَرَ',
 ];
+	repo.raw = SARF_SAGHEER;
 
+	function prepareData(){
+		repo.final = repo.final || 
+						 _.chain( repo.raw )
+						  .map( function(line){
+							return _.zipObject(
+												SARF_SAGHEER_KEYS_ARRAY,
+												line.split(REGEX_SARF_KEYS_SPLIT)
+									)
+						   })
+						  .tap(console.table)
+						  .value();
+		return repo.final;
+	}
+	
 	publicApi = {
 		
 		//comment these out after API stable
-		_data: SARF_SAGHEER
+		_data: SARF_SAGHEER,
+		prepareData: prepareData,
 		
 	};
 	return publicApi;
