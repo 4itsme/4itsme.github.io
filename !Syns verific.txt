@@ -1,18 +1,33 @@
 Q's:
 
-* 2:34 why h17 didnt show up?? {"t":"h17","r":"2:34 76:7 2:59 28:10 28:23 70:1 27:85"},
-
 * 2:68 LABELS seem wrong. topic name "to regard?" for l6 is wrong.
 
 * in s24 article change ref: 2:107 is correct reference not 2:108 for s24. 
 
 * in p54 article, give better title: "To create" nstead of giving birth
 
+* minor. article dd2. has question/comment in it. get clarified. (ayah 2:138 for the topic: To drown, dip (id: dd2))
+.........................................
+
+* in article SA1, remove the heading.. SAAD. adds no benefit. see ayah 3:141 for the topic: To cleanse, wipe (id: SA1)
+
+* general: 
+	- remove .to spurious hyperlinks.
+	- remove the margin spacings all around.
+	- remove the odd colors, fonts etc.
+
+* minor. seems to be no entry for sawm/fast. Near Synonyms found in ayah 9:112 for the topic: Fasting person (id: r16)	
+
+
+
+
+
+
+FIXED and Verified:
+* 2:34 why h17 didnt show up?? {"t":"h17","r":"2:34 76:7 2:59 28:10 28:23 70:1 27:85"},
+
 * why 2:54 doesnt have link to [ayah 2:117 for the topic: To create (id: p54)]
 	{"t":"p54","r":"2:54 2:117 30:30 35:1 4:1 5:110 23:14 6:98 43:18 56:72 7:179 67:24"},
 	Any reference at beginning isnt showing link! like 2:34 above.
 	
 * 2:50 link missing to topic dd2.. ayah 2:138 for the topic: To drown, dip (id: dd2)
-
-* minor. article dd2. has question/comment in it. get clarified. (ayah 2:138 for the topic: To drown, dip (id: dd2))
-
