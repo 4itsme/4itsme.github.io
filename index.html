@@ -130,20 +130,16 @@
 
 
 	<ul class="nav nav-tabs" id="myTab">
-	  <li v-bind:class="{ active: tab === 'about' }" @click="tab = 'about'"><a data-target="#about" data-toggle="tab">About</a></li>	
 	  <li v-bind:class="{ active: tab === 'asbab' }" @click="tab = 'asbab'"><a data-target="#asbab" data-toggle="tab">Asbab</a></li>
 	  <li v-bind:class="{ active: tab === 'synonyms' }" @click="tab = 'synonyms'"><a data-target="#synonyms" data-toggle="tab">Synonyms</a></li>
 	  <li v-bind:class="{ active: tab === 'search' }" @click="tab = 'search'"><a data-target="#search" data-toggle="tab">Search results</a></li>
 	  <li v-bind:class="{ active: tab === 'misc' }" @click="tab = 'misc'"><a data-target="#misc" data-toggle="tab">Misc</a></li>
+	  <li v-bind:class="{ active: tab === 'about' }" @click="tab = 'about'"><a data-target="#about" data-toggle="tab">About</a></li>	
 	</ul>
 
 
 	<div class="tab-content">
 	  
-	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
-	  	About.. content coming soon.
-	  </div>
-
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'asbab' }" id="asbab">
 		<div v-if="showAsbabDetail">
 			<BR/>
@@ -234,6 +230,8 @@
 			 <HR>
 		  </div>
 
+		  <div v-else>Misc details shown here if available</div>
+
 		  <div v-show="debug">
 			  {{queryData}}
 			  {{ref}}
@@ -243,8 +241,10 @@
 				<!-- {{asbabDetail}} -->
 			  <!-- </PRE> -->
 		  </div>
+	  </div>
 
-		  <div v-else>Misc details shown here if available</div>
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
+	  	About.. content coming soon.
 	  </div>
 
 	</div>
@@ -503,7 +503,7 @@ var vm = new Vue({
 			vm.go = function () {
 			  var keyword = vm.keyword.trim(); //this will break IE compat; needs polyfill
 			  var regEx = new RegExp(/^(\d*)\:(\d*)(?:(?:\:(\d*))?)$/);
-			  if( regEx.test(keyword) ){
+			  if( regEx.test(keyword) ){//the search keyword is an ayah reference.. display it.
 				var temp = keyword.match(regEx); // /(\d*)\:(\d*)\:(\d*)/),
 					loc ={sura: +temp[1], ayah: +temp[2], word: temp.length >= 3 ? +temp[3] : null };
 				vm.queryData.ayah = loc.ayah; //also change numAyahs
@@ -511,7 +511,8 @@ var vm = new Vue({
 				//vm.queryData.page = Q.ayah.page(loc.surah, loc.ayah);	
 				//vm.onChange('page');
 			  }
-			  else if(keyword.indexOf('LEM:') != -1){
+			  else if(keyword.indexOf('LEM:') != -1){//keyword is a Lemma search
+			  	vm.tab = 'misc';
 				//potential Lemma search
 				var pattern = keyword,				
 					//pattern = 'LEM:tasomiyap', //'LEM:m~usam~FY|ROOT:smw', //'LEM:sam~aY`|ROOT:smw'; //'ROOT:smw'; //'LEM:r~aHiym|ROOT:rHm';
@@ -552,8 +553,8 @@ var vm = new Vue({
 				vm.lemResults = results;
 				
 			  }
-			  else if(keyword.indexOf('ROOT:') != -1 || keyword.length === 3){
-				//potential Root Lem search...
+			  else if(keyword.indexOf('ROOT:') != -1 ){//|| keyword.length === 3){
+				vm.tab = 'misc';//potential Root Lem search...
 				var query = { root: keyword.replace('ROOT:', '') };
 				var o = typeof(qRootLemDict) !== 'undefined' && qRootLemDict.lookup(query);
 				o = o && _.map(o.lems, function(lem, index){
@@ -562,6 +563,7 @@ var vm = new Vue({
 				vm.rootLemResults = o;	
 			  }
 			  else{
+			  	vm.tab = 'search';
 				var startTime, endTime, message = '';
 				  //vm.searchResults = qSearch.search(keyword);
 				//console.log((message = 'Searching...' /*(startTime = new moment()) +' request fired. '*/) );
