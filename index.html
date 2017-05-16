@@ -244,7 +244,17 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
-	  	About.. content coming soon.
+	  	About.. content coming soon. <BR>
+	  	In the meanwhile, feel free to leave feedback below.<BR><BR>
+
+		<div id=contact form>
+			<form v-on:submit.stop.prevent="feedbackOnSubmit()" method="POST" action="http://formspree.io/4gutsy+formspree@gmail.com">
+			  <input v-model="feedbackEmail" type="email" name="email" placeholder="Your email (optional)"><BR><BR>
+			  <textarea v-model="feedbackMessage" name="message" placeholder="Your message"></textarea><BR><BR>
+			  <button type="submit">Send</button>
+			</form>
+		</div>
+
 	  </div>
 
 	</div>
@@ -291,6 +301,9 @@ var vm = new Vue({
 	_: { find:function(){} },
 	currentPageSynonymsDetails: [],
 	tab: 'about',
+	feedbackEmail: '',
+	feedbackMessage: '',
+	feedbackOnSubmit: function(){},
 
 	currentVerse: 1,
 	queryData: {sura: 0, ayah: 0, word: 0, page: 0},
@@ -608,6 +621,9 @@ var vm = new Vue({
 			};
 		}
 		
+		vm.feedbackOnSubmit = function(){
+			vm.feedbackEmail = vm.feedbackEmail ? vm.feedbackEmail : '4gutsy+formautofillin@gmail.com';
+		}
 		vm.keyword = '1:1'; //'LEM:{som';
 		//vm.go();
 		if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
