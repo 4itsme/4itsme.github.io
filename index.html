@@ -244,11 +244,11 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
-	  	About.. content coming soon. <BR>
+	  	About.. content coming soon. <BR><BR>
 	  	In the meanwhile, feel free to leave feedback below.<BR><BR>
 
 		<div id=contact form>
-			<form v-on:submit.stop.prevent="feedbackOnSubmit()" method="POST" action="http://formspree.io/4gutsy+formspree@gmail.com">
+			<form v-on:submit="feedbackOnSubmit()" method="POST" action="http://formspree.io/4gutsy+formspree@gmail.com">
 			  <input v-model="feedbackEmail" type="email" name="email" placeholder="Your email (optional)"><BR><BR>
 			  <textarea v-model="feedbackMessage" name="message" placeholder="Your message"></textarea><BR><BR>
 			  <button type="submit">Send</button>
