@@ -249,6 +249,7 @@
 
 		<div id=contact form>
 			<form v-on:submit="feedbackOnSubmit()" method="POST" action="https://formspree.io/4gutsy+formspree@gmail.com">
+			  <meta name="referrer" content="origin" />
 			  <input v-model="feedbackEmail" type="email" name="email" placeholder="Your email (optional)"><BR><BR>
 			  <textarea v-model="feedbackMessage" name="message" placeholder="Your message"></textarea><BR><BR>
 			  <button type="submit">Send</button>
@@ -623,6 +624,15 @@ var vm = new Vue({
 		
 		vm.feedbackOnSubmit = function(){
 			vm.feedbackEmail = vm.feedbackEmail ? vm.feedbackEmail : '4gutsy+formautofillin@gmail.com';
+
+			$.ajax({
+			        url: "//formspree.io/" + vm.feedbackEmail, 
+			        method: "POST",
+			        data: {message: vm.feedbackMessage},
+			        dataType: "json"
+			});
+			alert('Thanks for the email, we\'ll be in touch promptly.');
+			return false;
 		}
 		vm.keyword = '1:1'; //'LEM:{som';
 		//vm.go();
