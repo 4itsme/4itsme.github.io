@@ -182,14 +182,71 @@
 		<div v-else>Synonyms info shown here if available</div>
 	  </div>
 
-	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'searc' }" id="search">
-	  	search
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
+		  <div v-if="searchResults && Object.keys(searchResults).length > 0">
+			  <HR>Search results: <BR>
+			  <div v-for="(matches, key, index) in searchResults">
+				<div v-if="key !== 'keyword'">
+					<BR>
+					{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
+					<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+						<div v-for="match in matches">
+							<!-- {{match}} -->
+							<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
+								{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
+							</A>
+							{{ match.split('|')[2] }}
+						</div>
+					</div>
+					<BR>
+				</div>
+			  </div>
+			  <HR>
+		  </div>
+		  <div v-else>Search results shown here if available</div>
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
-	  	misc
+		  <div v-if="rootLemResults && rootLemResults.length > 0">
+			  <HR>Dictionary lookup results: <BR>
+			  <!-- {{ rootLemResults }} -->
+			  ROOT:{{rootLemResults.length > 0 ? rootLemResults[0].root : '-'}}, Instances: {{rootLemResults.length > 0 ? rootLemResults[0].rootInstances : '-'}}
+			  <div v-for="(match, key, index) in rootLemResults">
+				<A href=# @click='goRootToLem(match, key, index);' v-bind:title='match.verse'>
+					LEM:{{match.lem}}
+				</A>, Instances: {{match.lemInstances}}
+			  </div>
+			  <HR>
+		  </div>
+		  
+		  <div v-if="lemResults && Object.keys(lemResults).length > 0">
+			<HR>Dictionary Lemma lookup results: {{ Object.keys(lemResults).length}}<BR>
+				<!-- {{ lemResults }} -->
+				
+				<div v-if="lemResults && Object.keys(lemResults).length > 0" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+					<div v-for="(match, key, index) in lemResults">
+						<A href=# @click='goLem(match, key, index);' v-bind:title='match.verse'>
+							{{match.surah}}:{{match.ayah}}:{{match.word}}
+						</A>
+						{{match.snippet.substring(0,100)}}
+					</div>
+				</div>
+			 <HR>
+		  </div>
+
+		  <div v-show="debug">
+			  {{queryData}}
+			  {{ref}}
+			  Asbab: {{currentPageAsbab}}
+			  Synonyms: {{currentPageSynonyms}}
+			  <!-- <PRE> -->
+				<!-- {{asbabDetail}} -->
+			  <!-- </PRE> -->
+		  </div>
+
+		  <div v-else>Misc details shown here if available</div>
 	  </div>
-	  
+
 	</div>
 </div>
 
@@ -201,64 +258,7 @@
   <!-- {{ayahsListFromPage}} -->
   <!-- <HR> -->
 
-  <div v-if="rootLemResults && rootLemResults.length > 0">
-	  <HR>Dictionary lookup results: <BR>
-	  <!-- {{ rootLemResults }} -->
-	  ROOT:{{rootLemResults.length > 0 ? rootLemResults[0].root : '-'}}, Instances: {{rootLemResults.length > 0 ? rootLemResults[0].rootInstances : '-'}}
-	  <div v-for="(match, key, index) in rootLemResults">
-		<A href=# @click='goRootToLem(match, key, index);' v-bind:title='match.verse'>
-			LEM:{{match.lem}}
-		</A>, Instances: {{match.lemInstances}}
-	  </div>
-	  <HR>
-  </div>
   
-  <div v-if="lemResults && Object.keys(lemResults).length > 0">
-	<HR>Dictionary Lemma lookup results: {{ Object.keys(lemResults).length}}<BR>
-		<!-- {{ lemResults }} -->
-		
-		<div v-if="lemResults && Object.keys(lemResults).length > 0" style="overflow:scroll; max-height:200px; white-space: nowrap;">
-			<div v-for="(match, key, index) in lemResults">
-				<A href=# @click='goLem(match, key, index);' v-bind:title='match.verse'>
-					{{match.surah}}:{{match.ayah}}:{{match.word}}
-				</A>
-				{{match.snippet.substring(0,100)}}
-			</div>
-		</div>
-	 <HR>
-  </div>
-  
-  <div v-if="searchResults && Object.keys(searchResults).length > 0">
-	  <HR>Search results: <BR>
-	  <div v-for="(matches, key, index) in searchResults">
-		<div v-if="key !== 'keyword'">
-			<BR>
-			{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
-			<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;">
-				<div v-for="match in matches">
-					<!-- {{match}} -->
-					<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
-						{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
-					</A>
-					{{ match.split('|')[2] }}
-				</div>
-			</div>
-			<BR>
-		</div>
-	  </div>
-	  <HR>
-  </div>
-  
- <BR>
-  <DIV v-show="debug">
-	  {{queryData}}
-	  {{ref}}
-	  Asbab: {{currentPageAsbab}}
-	  Synonyms: {{currentPageSynonyms}}
-	  <!-- <PRE> -->
-		<!-- {{asbabDetail}} -->
-	  <!-- </PRE> -->
-  </DIV>
 
   
 </div>
