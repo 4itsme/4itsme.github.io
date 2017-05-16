@@ -78,20 +78,20 @@
 						<span style=font-size:1em >{{ verse.surah }}:{{ verse.ayah }} &nbsp; </span>
 						<span style=direction:rtl;font-size:2.35em >{{ayah}}</span>
 						<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
-							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah)" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
+							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
 								<!-- [A] -->
 								<span style="cursor:pointer" class="label label-warning" >ASBAB</span>
 							</A>
 							
 						</span>
 						<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
-							<A HREF="#" @click="showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
+							<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
 								<!-- [S] -->
 								<span style="cursor:pointer" class="label label-info" >SYNMS</span>
 							</A> &nbsp; &nbsp;<BR>
 							<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
 								<span v-for="item in first">
-									<A HREF="#" @click="showSynonymsFor(item, verse.surah, verse.ayah)">
+									<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, verse.surah, verse.ayah)">
 										<span class="label label-success">
 											{{item.n}}<span class="badge">{{ getSynonymsDetailsFor(item, verse.surah, verse.ayah).words.length }}</span>
 										</span>
@@ -139,54 +139,57 @@
 
 
 	<div class="tab-content">
+	  
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
 	  	About.. content coming soon.
 	  </div>
+
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'asbab' }" id="asbab">
-	  	asbab
+		<div v-if="showAsbabDetail">
+			<BR/>
+			Sabab Nuzul details for selected Ayah:<BR>
+			<PRE>{{asbabDetail}}</PRE>
+			<BR/>
+		</div>
+		<div v-else>Asbab shown here if available</div>
 	  </div>
+	  
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'synonyms' }" id="synonyms">
-	  	synonyms
+		<div v-if="showSynonymsDetail">
+			<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
+			Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
+			<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
+			
+			<span v-for="word in synonymsDetail.words">
+				<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+				<span class="label label-info" :title="word.word">
+					{{word.wordEn}}
+				</span>
+			</A>&nbsp;
+			</span>
+							
+			<!-- 16:9 aspect ratio -->
+			<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+			  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
+			<!-- </div>					 -->
+			<!-- 4:3 aspect ratio -->
+			<div class="embed-responsive embed-responsive-4by3">
+			  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+			</div>
+			<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
+			<BR/>
+		</div>
+		<div v-else>Synonyms info shown here if available</div>
 	  </div>
+
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'searc' }" id="search">
 	  	search
 	  </div>
+
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
 	  	misc
 	  </div>
-	</div>
-
-
-	<div v-if="showAsbabDetail">
-		<BR/>
-		Sabab Nuzul details for selected Ayah:<BR>
-		<PRE>{{asbabDetail}}</PRE>
-		<BR/>
-	</div>
-
-	<div v-if="showSynonymsDetail">
-		<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
-		Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
-		<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
-		
-		<span v-for="word in synonymsDetail.words">
-			<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
-			<span class="label label-info" :title="word.word">
-				{{word.wordEn}}
-			</span>
-		</A>&nbsp;
-		</span>
-						
-		<!-- 16:9 aspect ratio -->
-		<!-- <div class="embed-responsive embed-responsive-16by9"> -->
-		  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
-		<!-- </div>					 -->
-		<!-- 4:3 aspect ratio -->
-		<div class="embed-responsive embed-responsive-4by3">
-		  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
-		</div>
-		<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
-		<BR/>
+	  
 	</div>
 </div>
 
