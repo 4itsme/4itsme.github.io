@@ -56,8 +56,8 @@
   <button v-on:click="go">Go</button>  {{keyword}} 
   <input type=checkbox v-model="showTrans" click="showTrans = !showTrans" title="show translation" />Translation
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
-  <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab" title="show Asbab (Sababun Nuzul)" />Asbab
-  <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms" title="show transliteration" />Synonyms
+  <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab; tab = 'asbab';" title="show Asbab (Sababun Nuzul)" />Asbab
+  <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms; tab = 'synonyms';" title="show transliteration" />Synonyms
   <span v-if='isLoading'>
 	<ul class="fa-ul">
 		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
@@ -127,6 +127,36 @@
   </div>
 
 <div class="col-md-5">
+
+
+	<ul class="nav nav-tabs" id="myTab">
+	  <li v-bind:class="{ active: tab === 'about' }" @click="tab = 'about'"><a data-target="#about" data-toggle="tab">About</a></li>	
+	  <li v-bind:class="{ active: tab === 'asbab' }" @click="tab = 'asbab'"><a data-target="#asbab" data-toggle="tab">Asbab</a></li>
+	  <li v-bind:class="{ active: tab === 'synonyms' }" @click="tab = 'synonyms'"><a data-target="#synonyms" data-toggle="tab">Synonyms</a></li>
+	  <li v-bind:class="{ active: tab === 'search' }" @click="tab = 'search'"><a data-target="#search" data-toggle="tab">Search results</a></li>
+	  <li v-bind:class="{ active: tab === 'misc' }" @click="tab = 'misc'"><a data-target="#misc" data-toggle="tab">Misc</a></li>
+	</ul>
+
+
+	<div class="tab-content">
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
+	  	About.. content coming soon.
+	  </div>
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'asbab' }" id="asbab">
+	  	asbab
+	  </div>
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'synonyms' }" id="synonyms">
+	  	synonyms
+	  </div>
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'searc' }" id="search">
+	  	search
+	  </div>
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
+	  	misc
+	  </div>
+	</div>
+
+
 	<div v-if="showAsbabDetail">
 		<BR/>
 		Sabab Nuzul details for selected Ayah:<BR>
@@ -257,7 +287,8 @@ var vm = new Vue({
 	synonymsDetail: "",
 	_: { find:function(){} },
 	currentPageSynonymsDetails: [],
-	
+	tab: 'about',
+
 	currentVerse: 1,
 	queryData: {sura: 0, ayah: 0, word: 0, page: 0},
 	ayahsCount: 7,
