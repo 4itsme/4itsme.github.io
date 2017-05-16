@@ -67,7 +67,7 @@
   </span>{{message}}
 
   <HR>
-  <div>
+  <div class="col-md-7">
 	<div v-if="ayahsListFromPage">
 		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
 		<div style="overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
@@ -124,40 +124,41 @@
 		</div>
 		<button v-show="queryData.page !== 604" @click="queryData.page = queryData.page >= 604 ? 604 : queryData.page + 1; onChange('page');">Next page</button>
 	</div>
-</div>
+  </div>
 
-<div v-if="showAsbabDetail">
-	<BR/>
-	Sabab Nuzul details for selected Ayah:<BR>
-	<PRE>{{asbabDetail}}</PRE>
-	<BR/>
-</div>
-
-<div v-if="showSynonymsDetail">
-	<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
-	Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
-	<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
-	
-	<span v-for="word in synonymsDetail.words">
-		<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
-		<span class="label label-info" :title="word.word">
-			{{word.wordEn}}
-		</span>
-	</A>&nbsp;
-	</span>
-					
-	<!-- 16:9 aspect ratio -->
-	<!-- <div class="embed-responsive embed-responsive-16by9"> -->
-	  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
-	<!-- </div>					 -->
-	<!-- 4:3 aspect ratio -->
-	<div class="embed-responsive embed-responsive-4by3">
-	  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+<div class="col-md-5">
+	<div v-if="showAsbabDetail">
+		<BR/>
+		Sabab Nuzul details for selected Ayah:<BR>
+		<PRE>{{asbabDetail}}</PRE>
+		<BR/>
 	</div>
-	<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
-	<BR/>
-</div>
 
+	<div v-if="showSynonymsDetail">
+		<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
+		Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
+		<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
+		
+		<span v-for="word in synonymsDetail.words">
+			<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+			<span class="label label-info" :title="word.word">
+				{{word.wordEn}}
+			</span>
+		</A>&nbsp;
+		</span>
+						
+		<!-- 16:9 aspect ratio -->
+		<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+		  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
+		<!-- </div>					 -->
+		<!-- 4:3 aspect ratio -->
+		<div class="embed-responsive embed-responsive-4by3">
+		  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+		</div>
+		<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
+		<BR/>
+	</div>
+</div>
 
 <!--<span XXv-bind:style="!ayah.scoreVerb || ayah.scoreVerb < 0 ? 'color:lightgray' : ayah.scoreVerb <= 15 ? 'color:YellowGreen' : 'color:brown' " 
 				   vbind:style="'opacity:' + (!ayah.scoreVerb || ayah.scoreVerb < 0 ? '0.2' : ayah.scoreVerb <= 15 ? '0.5' : '1') " 
