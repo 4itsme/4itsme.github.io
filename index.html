@@ -70,24 +70,31 @@
   <div class="col-md-7">
 	<div v-if="ayahsListFromPage">
 		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
-		<div style="overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
-			<div v-for="(verse, verseIndex) in ayahsListFromPage">
+		<div dir=rtl class='quranpage clearfix' style="text-align: justify; overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
+			<span v-for="(verse, verseIndex) in ayahsListFromPage" Xstyle="display:inline-block; float: right;">
 				
 				<span v-for="(ayah, prop, ayahindex) in getVerse(verse.verseNo)">
-					<div dir=rtl v-if="prop == 'BUCK'" dir="rtl" >
-						<span style=font-size:1em >{{ verse.surah }}:{{ verse.ayah }} &nbsp; </span>
+					<span v-if="prop == 'BUCK'" dir="rtl">
+						
+						<span v-if="showTrans || showTranslit" style=font-size:.96em >
+							{{ verse.surah }}:{{ verse.ayah }} &nbsp; 
+						</span>
 						<span style=direction:rtl;font-size:2.35em >{{ayah}}</span>
+						<span v-if="true || (!showTrans && !showTranslit)" :title="'Ayah ref: ' + verse.surah + ':'+ verse.ayah"  style=font-size:.96em >
+							<span>﴿</span>{{ verse.ayah }}<span>﴾</span>
+						</span>
+
 						<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
 							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
 								<!-- [A] -->
-								<span style="cursor:pointer" class="label label-warning" >ASBAB</span>
+								<span style="cursor:pointer" class="label label-warning" >ASB</span>
 							</A>
 							
 						</span>
 						<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
 							<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
 								<!-- [S] -->
-								<span style="cursor:pointer" class="label label-info" >SYNMS</span>
+								<span style="cursor:pointer" class="label label-info" >SYN</span>
 							</A> <!--&nbsp; &nbsp;<BR>
 							<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
 								<span v-for="item in first">
@@ -108,19 +115,22 @@
 							</span> -->
 							
 						</span>
-					</div>
+					</span>
 					<span v-else-if="prop == 'BARE'" v-html="">	</span>
 					<span v-else-if="prop == 'TRANS'" >
-						<div v-if="showTrans">{{ ayah }}</div>
+						<div v-if="showTrans" dir=ltr>{{ ayah }}</div>
 					</span>
 					<span v-else-if="prop == 'TRANSLIT'" >
-						<div v-if="showTranslit" v-html="ayah"></div>
+						<div v-if="showTranslit" dir=ltr v-html="ayah"></div>
 					</span>
 					<span v-else>
 						{{ayah}} 
 					</span>
-				</span>	<BR>
-			</div>
+				</span>	
+				<span v-if="showTrans || showTranslit" >
+					<BR/>
+				</span>
+			</span>
 		</div>
 		<button v-show="queryData.page !== 604" @click="queryData.page = queryData.page >= 604 ? 604 : queryData.page + 1; onChange('page');">Next page</button>
 	</div>
