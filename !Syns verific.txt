@@ -19,7 +19,53 @@ Q's:
 * minor. seems to be no entry for sawm/fast. Near Synonyms found in ayah 9:112 for the topic: Fasting person (id: r16)	
 
 
+=============================================
+Verification: Juzz 3amma. 5/17/17.
+Topic ayah correction:
+* page 582. ayah 78:1. for the topic: No, nay (id: n28). Link topic n28 to ayah - instead of 78:1, to 78:4
+* page 582. ayah 78:6 for the topic: Peg, nail (id: m48). move topic to ayah 78:7
+* 			ayah 78:12 for the topic: Light, to illuminate (id: r15). 78:12 --> 78:13
+* 			ayah 78:24 for the topic: Water and its different types (id: p5) --> 78:25.
+*			ayah  79:31 for the topic: Benefit, to give benefit (id: f1) --> 79:33
+* 			ayah 79:40 for the topic: Wish/desire/hope (id: kh14) --> remove 79:41. let 79:40 stay.
+*			ayah 80:15 for the topic: Pious, virtuous (id: n32) --> 80:16
+*			ayah 80:21 for the topic: Bring to live (id: z8) --> 80:22
+*			ayah 80:24 for the topic: To fall, cause to fall (id: gg7) --> 80:25
+* 			ayah 80:27 for the topic: vegetables (id: t11) --> 80:28
+* 			ayah 80:32 for the topic: Fodder, grains – food for herbivores (id: ch3). leave 80:32, leave 80:31.
+*			ayah 80:40 for the topic: black (id: s26). --> 80:41
+*			--- @paused page 586 ---
+*			ayah 82:7 for the topic: To join, mix, blend (id: m39). --> 82:8.
+*			ayah 84:1 for the topic: To be capable (id: l3) --> 84:2
+*			ayah 85:21 for the topic: Divine tablet recording and its various names (id: l14) --> 85:22
+*			ayah 86:5 for the topic: To come out (id: n22) --> 86.6
+*			ayah 87:4 for the topic: Violently smashed or broken into minute pieces (id: ch20) --> 87:5. remove 87:4
+*			ayah 87:4 for the topic: Fodder, grains – food for herbivores (id: ch3) --> 87:5. remove 87:4.
+*			ayah 88:21 for the topic: Superintendent (id: d2) --> 88:22
+*			ayah 88:25 for the topic: Doomsday and its different names (id: q16) --> 88:26
+*			ayah 89:1 for the topic: Couple, pair (id: j19) --> 89:3 only; remove 89:1,2
+*			ayah 90:11 for the topic: Hill and types (id: tt6) --> remove 90:11, leave 90:10
+*			ayah 90:14 for the topic: Poor, destitute (id: t21) --> 90:16 only. not 90:14.
+*			ayah 91:1 for the topic: Ensue, to come after (id: p48) --> 91:2
+*			--- @paused page 596 ---
 
+Topic name mismatch?
+*			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
+*			ayah 89:22 for the topic: Congruence (id: h10). congruence vs. [to have mutual understanding]
+
+Topics duplicated or what??
+* 79:42: When; To write; 79:42 for the topic: To write (id: l9). 79:42 for the topic: When (id: k9).
+
+
+
+Invalid links:
+* p48: link to .it
+
+
+Bugs/change requests:
+* when click next page, it should scroll to top of div; right now it remains stuck where last scrolling left off.
+* when click a topic name, hide the current iframe; show spinning wheel; then show new topic; and might want to reset scrollbar to top.
+* when showing topic, add a cache busting param to it.. ?v=5555. else it will show old cached value.
 
 
 
