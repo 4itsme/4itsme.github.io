@@ -154,7 +154,7 @@
 		<div v-if="showAsbabDetail">
 			<BR/>
 			Sabab Nuzul details for selected Ayah: 
-			<button @click='showAsbabPretty = !showAsbabPretty'>Show {{ showAsbabPretty ? 'raw' : 'formatted' }}</button><BR><HR>
+			<button class="btn btn-default pull-right" @click='showAsbabPretty = !showAsbabPretty'>Show {{ showAsbabPretty ? 'raw' : 'formatted' }}</button><BR><HR>
 			<span v-if='showAsbabPretty'>
 				<span v-html='asbabDetail.pretty'></span>
 			</span>
