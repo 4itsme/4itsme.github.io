@@ -62,6 +62,7 @@ Topic ayah correction:
 *			ayah 114:4 for the topic: Jinn (id: j13) --> remove 114:5; let other 2 be there.
 -------------- end of last page ---------
 Lesson learnt: anywhere where we have range of ayah is where we see this problem mostly.
+Lesson learnt: highlighting the surah we are currently on ex: 114: throughtout the topic page seems to help in locating word fast.
 
 Topic name mismatch?
 *			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
