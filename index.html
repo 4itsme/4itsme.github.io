@@ -141,6 +141,16 @@
 	<div class="tab-content">
 	  
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'asbab' }" id="asbab">
+	  	<div>
+	  		Asbab-un-Nuzul in current page:
+	  		<span v-for="asbab in currentPageAsbab">
+	  			<span v-if="asbab">
+	  				<A HREF="#" @click="showAsbabFor(asbab.split(':')[0], asbab.split(':')[1]); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.93em >
+						<span class="label label-warning" style="cursor: pointer;">{{asbab}}</span> &nbsp;
+					</A>
+	  			</span>
+	  		</span>
+	  	</div>
 		<div v-if="showAsbabDetail">
 			<BR/>
 			Sabab Nuzul details for selected Ayah: 
