@@ -173,7 +173,7 @@
 					<BR>{{ subKey }}: 
 					<span v-for="(item, key) in subItem">
 						<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, subKey.split(':')[0], subKey.split(':')[1])">
-							<span class="label label-success">
+							<span class="label label-info">
 								{{item.n}}
 								<!--<span class="badge">{{ getSynonymsDetailsFor(item, key.split(':')[0], key.split(':')[1]).words.length }}</span>-->
 							</span>
@@ -197,7 +197,7 @@
 			
 			<span v-for="word in synonymsDetail.words">
 				<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
-				<span class="label label-info" :title="word.word">
+				<span class="label label-success" :title="word.word">
 					{{word.wordEn}}
 				</span>
 			</A>&nbsp;
