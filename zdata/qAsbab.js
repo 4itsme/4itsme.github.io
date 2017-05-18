@@ -83,12 +83,13 @@ var qAsbab = (function(){
 	
 	var getAsbabNuzul = function(sura, ayah){
 		var asbabRef = lookupAsbabKeyForAyah(sura, ayah);
+		var responseObj = {ref: asbabRef, raw: null};
 		if(!asbabData || !asbabRawData){
 			$.get(url, function(data){
 				asbabRawData = data;
 				processRawData();
 				//TODO: handle this later.. the first call needs to be handled either thru init, or by returning a promise?
-				return; ///TODO: debugger;///showAsbabNuzul( asbabRef );
+				//return; ///TODO: debugger;///showAsbabNuzul( asbabRef );
 			});
 		}else{
 			var i = _.indexOf(asbabDataKeys, asbabRef),
@@ -100,15 +101,39 @@ var qAsbab = (function(){
 			}else{
 				console.log('no asbab found for ' + asbabRef + 'in asbabDataKeys'); debugger;
 			}
-			return response; //returns null if no match found
+			responseObj.raw = response; //returns null if no match found
 		}
+		return responseObj;
+	}
+
+	var getAsbabNuzulPrettified = function(sura, ayah){
+		var responseObj = getAsbabNuzul(sura, ayah);
+		if(responseObj.raw){
+			//first add Surah name at top of entry
+			var ref = responseObj.ref,
+				refPlain = ref.replace(/^\[/, '').replace(/\]$/, ''),
+				suraNo = parseInt( refPlain.split(':')[0] ) || -1,
+				suraDetail = Q.surah.detail( suraNo ) || {},
+				compiled = _.template('Sura: <%= suraNo %>. <%=  english_name %> <%=  arabic_name %> <%= english_meaning %> (<%= type %>)<HR><BR>'),
+				suraHeader = compiled( _.extend( suraDetail, {suraNo: suraNo}) ),
+				rawSemiFormatted = responseObj.raw.replace( /^\d+$/gm, '<!--$0 -->' ); //replace any lines with just page nos like 3 in asbab for 2:98 pg 15 with it commented out.
+
+
+			if(suraHeader){
+				responseObj.pretty = suraHeader + rawSemiFormatted; //responseObj.raw;
+			}
+
+		}
+		return responseObj;
 	}
 	
 	var test = function(){
+		debugger;
 		console.log([
+			qAsbab.get(2, 6),
 			qAsbab.findForSura( 2 ),
 			qAsbab.findForPage( 10 ),
-			qAsbab.get('[2:62]')
+			//qAsbab.get('[2:62]')
 		]);
 	}
 	
@@ -119,7 +144,9 @@ var qAsbab = (function(){
 		findForPageAsync: findAsbabForPageAsync,
 		checkExistsAsbabForAyah: checkExistsAsbabForAyah,
 		lookupAsbabKeyForAyah: lookupAsbabKeyForAyah,
-		get:		 getAsbabNuzul,
+		get:		 getAsbabNuzulPrettified,
+		getAsbabNuzul: 	getAsbabNuzul,
+		getAsbabNuzulPrettified: getAsbabNuzulPrettified,
 		setData:	 setData,
 		test: test,
 		
