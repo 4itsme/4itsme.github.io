@@ -48,14 +48,29 @@ Topic ayah correction:
 *			ayah 90:14 for the topic: Poor, destitute (id: t21) --> 90:16 only. not 90:14.
 *			ayah 91:1 for the topic: Ensue, to come after (id: p48) --> 91:2
 *			--- @paused page 596 ---
+*			ayah 93:1 for the topic: Spread of darkness (id: t2) --> remove 93:1; only 93:2
+*			ayah 94:7 for the topic: To incline (id: r12) --> 94:8 only
+*			ayah 95:4 for the topic: Under, lowest (id: n30) --> 95:5 only
+*			ayah 98:2 for the topic: Strong, fixed (id: m31) --> 98:3 only
+*			ayah 101:11 for the topic: To know (id: j2) --> remove 101:11; only 101:10
+*			ayah 102:1 for the topic: To see, look (id: d30) --> 102:2 only; remove 102:1
+*			ayah 105:4 for the topic: Groups of animals (id: j12) --> remove 105:4; only 105:3
+*			ayah 106:1 for the topic: Cold , winter (id: s14) --> 106:2 only; remove 106:1
+*			ayah 107:6 for the topic: Goods, provisions (id: s4) --> 107:7 only
+*			ayah 108:3 for the topic: To slaughter (id: dh1) --> should be 108:2; off by one
+*			ayah 111:4 for the topic: Neck (id: gg3) --> 111:5
+*			ayah 114:4 for the topic: Jinn (id: j13) --> remove 114:5; let other 2 be there.
+-------------- end of last page ---------
+Lesson learnt: anywhere where we have range of ayah is where we see this problem mostly.
 
 Topic name mismatch?
 *			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
 *			ayah 89:22 for the topic: Congruence (id: h10). congruence vs. [to have mutual understanding]
 
+
 Topics duplicated or what??
 * 79:42: When; To write; 79:42 for the topic: To write (id: l9). 79:42 for the topic: When (id: k9).
-
+* ayah 99:1 for the topic: Wood (id: l8). ayah 99:1 for the topic: To tremble, shiver (id: k8). wood (seems missing) and to tremble/shiver
 
 
 Invalid links:
