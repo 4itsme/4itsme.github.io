@@ -19,6 +19,24 @@ Q's:
 * minor. seems to be no entry for sawm/fast. Near Synonyms found in ayah 9:112 for the topic: Fasting person (id: r16)	
 
 
+
+===============================================================
+Verification: Asbab un Nuzul - Juzz 3amma
+
+* Seems like asbab in same sura are somewhat clubbed together; 
+	- see asbab for [83:1]. it has asbab for next verse too looks like.
+	- see asbab for [92:5-6] -- writeup has mention of asbab for [92:19-21].
+
+Bugs/change requests:
+* page numbers come in middle of topic and interrupt flow
+* reflow the text so we dont see horizontal scrollbar
+* name references are extremely long and distracting
+----
+* would like to see surah name on top and ayah
+* would like to see links to prev and next asbab entry
+* would like to see how many asbabs in current page and in current surah
+* would like to see listing of all asbabs and ability to see the content on the right.
+
 =============================================
 Verification: Juzz 3amma. 5/17/17.
 Topic ayah correction:
@@ -84,7 +102,7 @@ Bugs/change requests:
 * when showing topic, add a cache busting param to it.. ?v=5555. else it will show old cached value.
 
 
-
+===============================================================
 FIXED and Verified:
 * 2:34 why h17 didnt show up?? {"t":"h17","r":"2:34 76:7 2:59 28:10 28:23 70:1 27:85"},
 
