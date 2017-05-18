@@ -1,3 +1,11 @@
+Backlog:
+* remove surah, search, page # prefix
+* make settings menu option and feedback under lef menu option
+* on ome page, show list of all surahs
+* 
+
+
+
 Q's:
 
 * 2:68 LABELS seem wrong. topic name "to regard?" for l6 is wrong.
