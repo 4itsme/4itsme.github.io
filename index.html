@@ -72,7 +72,70 @@
 		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
 		<div dir=rtl class='quranpage clearfix' style="text-align: justify; overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
 			<span v-for="(verse, verseIndex) in ayahsListFromPage" Xstyle="display:inline-block; float: right;">
-				
+				<!-- show basmallah -->
+				<span v-if="showAr && verse.isBasmallah">
+						<div id="bismillah" class="bismillah text-center word-font" style="text-align:center; font-size: 42px;" title="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" >
+							<HR>
+							﷽
+							<HR>
+						</div>
+				</span>
+
+				<!-- show arabic ayah -->
+				<span v-if="verse.BUCK" dir="rtl">
+					
+					<span v-if="showTrans || showTranslit" style=font-size:.96em >
+						{{ verse.surah }}:{{ verse.ayah }} &nbsp; 
+					</span>
+					<span style=direction:rtl;font-size:2.35em >{{ showAr ? verse.AR : verse.BUCK }}</span>
+					<span v-if="true || (!showTrans && !showTranslit)" :title="'Ayah ref: ' + verse.surah + ':'+ verse.ayah"  style=font-size:.96em >
+						<span>﴿</span>{{ verse.ayah }}<span>﴾</span>
+					</span>
+
+					<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
+						<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
+							<!-- [A] -->
+							<span style="cursor:pointer" class="label label-warning" >ASB</span>
+						</A>
+						
+					</span>
+					<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+						<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
+							<!-- [S] -->
+							<span style="cursor:pointer" class="label label-info" >SYN</span>
+						</A> <!--&nbsp; &nbsp;<BR>
+						<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+							<span v-for="item in first">
+								<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, verse.surah, verse.ayah)">
+									<span class="label label-success">
+										{{item.n}}<span class="badge">{{ getSynonymsDetailsFor(item, verse.surah, verse.ayah).words.length }}</span>
+									</span>
+								</A>&nbsp; &nbsp;
+								<!--<span v-for="word in getSynonymsDetailsFor(item, verse.surah, verse.ayah).words">
+									<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	<!--
+									<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+										<span class="label label-info" :title="word.word">
+											{{word.wordEn}}
+										</span>
+									</A>&nbsp;
+								</span>--><!--
+							</span>
+						</span> -->
+						
+					</span>
+				</span>
+
+				<!-- show translation, translit etc -->
+				<span v-if="verse.BARE" v-html="">	</span>
+				<span v-if="verse.TRANS" >
+					<div v-if="showTrans" dir=ltr>{{ verse.TRANS }}</div>
+				</span>
+				<span v-if="verse.TRANSLIT" >
+					<div v-if="showTranslit" dir=ltr v-html="verse.TRANSLIT"></div>
+				</span>
+
+
+<!--
 				<span v-for="(ayah, prop, ayahindex) in getVerse(verse.verseNo)">
 					<span v-if="prop == 'BUCK'" dir="rtl">
 						
@@ -86,14 +149,14 @@
 
 						<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
 							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
-								<!-- [A] -->
+								<!-- [A] --><!--
 								<span style="cursor:pointer" class="label label-warning" >ASB</span>
 							</A>
 							
 						</span>
 						<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
 							<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
-								<!-- [S] -->
+								<!-- [S] --><!--
 								<span style="cursor:pointer" class="label label-info" >SYN</span>
 							</A> <!--&nbsp; &nbsp;<BR>
 							<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
@@ -113,8 +176,15 @@
 									</span>--><!--
 								</span>
 							</span> -->
-							
+<!--							
 						</span>
+					</span>
+					<span v-if="prop == 'isBasmallah'">
+						<div v-if="ayah" id="bismillah" class="bismillah text-center word-font" style="text-align:center;" title="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" >
+							<HR>
+							﷽
+							<HR>
+						</div>
 					</span>
 					<span v-else-if="prop == 'BARE'" v-html="">	</span>
 					<span v-else-if="prop == 'TRANS'" >
@@ -127,6 +197,7 @@
 						{{ayah}} 
 					</span>
 				</span>	
+-->
 				<span v-if="showTrans || showTranslit" >
 					<BR/>
 				</span>
@@ -327,6 +398,7 @@
 var vm = new Vue({
   el: '#app-1',
   data: {
+  	showAr: true,
 	sura:1,
 	page:1,
 	keyword: 'LEM:{som',//null,
@@ -477,7 +549,6 @@ var vm = new Vue({
 						 })
 						.value() || [];
 		});
-		var showAr = true;
 		if(vm){
 			vm._ = _;
 			vm.suras = [];
@@ -496,7 +567,6 @@ var vm = new Vue({
 			vm.getVerse = function(verseNo){
 				var result = typeof(qSearch) !== 'undefined' && qSearch.lookup(verseNo); 
 				if(result){
-					result.BUCK = showAr ? qUtil.EnToAr(result.BUCK) : result.BUCK;
 					result.TRANS = !result.TRANS ? '' : result.TRANS.split('|')[2];
 					result.TRANSLIT = !result.TRANSLIT ? '' : result.TRANSLIT.split('|')[2];
 				}
@@ -531,6 +601,21 @@ var vm = new Vue({
 				//this.queryData.sura = _.first(this.ayahsListFromPage).surah;
 				//this.queryData.ayah = _.first(this.ayahsListFromPage).ayah;
 				
+				//now populate the ayah details for each ayah
+				_.each(this.ayahsListFromPage, function(verse){
+					//existing verse properties: ayah, surah, verseNo
+					var verseEx = vm.getVerse(verse.verseNo);
+
+					var basmallah = 'bisomi {ll~ahi {lr~aHoma`ni {lr~aHiymi ',
+						isBasmallah = verse.ayah == 1 && verseEx.BUCK && verseEx.BUCK.startsWith( basmallah );
+					if(isBasmallah){ verseEx.BUCK = verseEx.BUCK.substring( basmallah.length ); }
+					
+					verseEx.AR = qUtil.EnToAr( verseEx.BUCK );
+					verseEx.BARE = qUtil.BuckToBare( verseEx.BUCK );
+
+					verse = _.extend(verse, {isBasmallah: isBasmallah}, verseEx );
+				});
+
 				//now find out if any Asbab for this page as an async call
 				if(vm.showAsbab) 
 				qAsbab.findForPageAsync( page )
