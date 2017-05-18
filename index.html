@@ -305,13 +305,13 @@
 				<div v-if="key !== 'keyword'">
 					<BR>
 					{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
-					<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+					<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;" :dir="key === 'arabic' || key === 'arabicBuckTranslit' ? 'rtl' : 'ltr'">
 						<div v-for="match in matches">
 							<!-- {{match}} -->
 							<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
 								{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
 							</A>
-							{{ match.split('|')[2] }}
+							{{ key === 'arabic' || key === 'arabicBuckTranslit' ? qUtil.EnToAr( match.split('|')[2] ) : match.split('|')[2] }}
 						</div>
 					</div>
 					<BR>
@@ -422,6 +422,7 @@ var vm = new Vue({
 	showSynonymsDetail: false,
 	synonymsDetail: "",
 	_: { find:function(){} },
+	qUtil:{},
 	currentPageSynonymsDetails: [],
 	tab: 'about',
 	feedbackEmail: '',
@@ -548,6 +549,7 @@ var vm = new Vue({
 							} );
 						 })
 						.value() || [];
+			vm.qUtil = qUtil;
 		});
 		if(vm){
 			vm._ = _;
