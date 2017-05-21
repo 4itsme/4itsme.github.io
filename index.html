@@ -307,7 +307,7 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
-		  <div class=searchResults v-if="searchResults && Object.keys(searchResults).length > 0">
+		  <div class=searchResults v-if="searchResults && Object.keys(searchResults).length > 1">
 			  <HR>Search results: <BR>
 			  <div v-for="(matches, key, index) in searchResults">
 				<div v-if="key !== 'keyword'">
@@ -328,6 +328,9 @@
 			  <HR>
 		  </div>
 		  <div v-else>Search results shown here if available</div>
+		  <div v-if="searchResults.searching">
+		  	<i class="fa fa-spinner fa-pulse"></i>Searching...
+		  </div>
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
@@ -409,7 +412,7 @@ var vm = new Vue({
   	showAr: true,
 	sura:1,
 	page:1,
-	keyword: 'LEM:{som',//null,
+	keyword: null,
 	searchResults: {},
 	rootLemResults: {},
 	lemResults: {},
@@ -438,7 +441,7 @@ var vm = new Vue({
 	feedbackOnSubmit: function(){},
 
 	currentVerse: 1,
-	queryData: {sura: 0, ayah: 0, word: 0, page: 0},
+	queryData: {sura: 1, ayah: 1, word: 1, page: 1},
 	ayahsCount: 7,
 	ayahsListFromPage: [{sura: 1, ayah: 1, verse: 1}],
 	
@@ -549,7 +552,7 @@ var vm = new Vue({
 		qMain.init(origin + '/', 'zdata/');
 		qMain.go(function(){
 			vm.isLoading = false;
-			vm && vm.go();
+			//vm && vm.go();
 			
 			vm.suras = _.chain( _.range(1, 115) )
 						.map( function(s){
@@ -665,7 +668,9 @@ var vm = new Vue({
 	
 			
 			vm.go = function () {
-			  var keyword = vm.keyword.trim(); //this will break IE compat; needs polyfill
+			  vm.message = "";
+			  vm.searchResults = {searching: true};
+			  var keyword = (vm.keyword || "").trim(); //this will break IE compat; needs polyfill
 			  var regEx = new RegExp(/^(\d*)\:(\d*)(?:(?:\:(\d*))?)$/);
 			  if( regEx.test(keyword) ){//the search keyword is an ayah reference.. display it.
 				var temp = keyword.match(regEx); // /(\d*)\:(\d*)\:(\d*)/),
@@ -736,6 +741,7 @@ var vm = new Vue({
 				qSearch.searchAsync(keyword).then(function(results){
 					vm.isLoading = false;
 					vm.searchResults = results;
+					vm.searchResults.searching = false;
 					console.log((vm.message += ((endTime = new moment()) +' results received') ) );
 					if(!(endTime - startTime))debugger;
 					vm.message = 'Search time: ' + endTime.diff(startTime, 'seconds') + ' seconds. (' + (endTime - startTime) + ' ms.) ';//moment(startTime).fromNow() + ' ' + vm.message;
@@ -830,8 +836,6 @@ var vm = new Vue({
 			alert('Thanks for the email, we\'ll be in touch promptly.');
 			return false;
 		}
-		vm.keyword = '1:1'; //'LEM:{som';
-		//vm.go();
 		if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
 	}
   </script>
