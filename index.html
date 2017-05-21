@@ -19,9 +19,9 @@
 
 <body>  
 <div id="app-1" class="container-fluid">
-  <H2>Q viewer</H2>
+  <!--<H2>Q viewer</H2>-->
   <!-- Sura dropdown   -->
-  Sura #: &nbsp;
+  <!--Sura #: &nbsp;-->
   <span v-if="suras && suras.length > 0">
     <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
       <option v-for="sura in suras" v-bind:value="sura.value">
@@ -57,7 +57,8 @@
   &nbsp;
   
 
-  Search: <input v-model="keyword" v-on:keyup.enter="go" placeholder='Search "Noah"' type=text />
+  <!-- Search: -->
+  <input v-model="keyword" v-on:keyup.enter="go" placeholder='Search "Noah"' type=text />
   <button v-on:click="go">Go</button>  {{keyword}} 
   <input type=checkbox v-model="showTrans" click="showTrans = !showTrans" title="show translation" />Translation
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
@@ -669,8 +670,9 @@ var vm = new Vue({
 			
 			vm.go = function () {
 			  vm.message = "";
-			  vm.searchResults = {searching: true};
+			  vm.searchResults = {};
 			  var keyword = (vm.keyword || "").trim(); //this will break IE compat; needs polyfill
+			  if(!keyword || keyword === ""){ return; }
 			  var regEx = new RegExp(/^(\d*)\:(\d*)(?:(?:\:(\d*))?)$/);
 			  if( regEx.test(keyword) ){//the search keyword is an ayah reference.. display it.
 				var temp = keyword.match(regEx); // /(\d*)\:(\d*)\:(\d*)/),
@@ -732,7 +734,7 @@ var vm = new Vue({
 				vm.rootLemResults = o;	
 			  }
 			  else{
-			  	vm.tab = 'search';
+			  	vm.tab = 'search'; vm.searchResults = {searching: true};
 				var startTime = new moment(), endTime, message = '';
 				  //vm.searchResults = qSearch.search(keyword);
 				//console.log((message = 'Searching...' /*(startTime = new moment()) +' request fired. '*/) );
@@ -740,7 +742,7 @@ var vm = new Vue({
 				//vm.message = message;
 				qSearch.searchAsync(keyword).then(function(results){
 					vm.isLoading = false;
-					vm.searchResults = results;
+					vm.searchResults = results || {};
 					vm.searchResults.searching = false;
 					console.log((vm.message += ((endTime = new moment()) +' results received') ) );
 					if(!(endTime - startTime))debugger;
