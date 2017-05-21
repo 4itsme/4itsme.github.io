@@ -10,6 +10,11 @@
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
   <link rel="stylesheet" href="libcss/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="libcss/font-awesome-4.7.0/css/font-awesome.min.css">
+  <style>
+	  mark, .mark{
+	       background: #ff0!important;
+	   }
+  </style>
 </head>
 
 <body>  
@@ -271,7 +276,7 @@
 				</span>
 			</span>
 	  	</div>
-		<div v-if="showSynonymsDetail && synonymsDetail">
+		<div class=synonymsDetail v-if="showSynonymsDetail && synonymsDetail">
 			<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
 			Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
 			<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
@@ -285,7 +290,7 @@
 			</span>
 			
 			<HR>
-			<span v-html='synonymsDetail.content'></span>
+			<span class='synonymsDetailContent' v-html='synonymsDetail.content'></span>
 			<HR>
 			<!-- 16:9 aspect ratio -->
 			<!-- <div class="embed-responsive embed-responsive-16by9"> -->
@@ -777,6 +782,10 @@ var vm = new Vue({
 					var iContent = vm.fnGrabHtmlBody(content);
 					console.log([topicUrl, content.length, iContent.length] );
 					vm.synonymsDetail.content = iContent;
+					setTimeout(function(){
+						//now turn on highlighting of sura
+						$('.synonymsDetailContent').mark( [vm.synonymsDetail.ref, vm.synonymsDetail.ref.split(':')[0] + ':' ] ); //hilite the full reference or atleast the sura # matches.
+					}, 100);
 				});
 			return {
 				name: name,
