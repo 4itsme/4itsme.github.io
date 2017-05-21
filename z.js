@@ -7,7 +7,7 @@ var path = require('path');
 
 var regexAyahsRange = /([0-9]+)\:([0-9]+)(?:\-([0-9]+))/gm;
 var regexSpuriousUrls = /<a href="[^>]*>[^\<]*<\/a>/g;
-
+var regexGrabHtmlBody = /(<body[^\>]*>|<\/body>)/ig;
 
 
 // List all files in a directory in Node.js recursively in a synchronous fashion
@@ -28,7 +28,7 @@ var files = walkSync('content'),
 	
 var fnGrabHtmlBody = function(htmlText){
 	var tmp;
-	return (tmp = htmlText.split(/(<body>|<\/body>)/ig)) && tmp && tmp.length >= 2 ? tmp[2] : tmp;
+	return (tmp = htmlText.split(regexGrabHtmlBody)) && tmp && tmp.length >= 2 ? tmp[2] : tmp;
 }
 
 

@@ -283,7 +283,10 @@
 				</span>
 			</A>&nbsp;
 			</span>
-							
+			
+			<HR>
+			<span v-html='synonymsDetail.content'></span>
+			<HR>
 			<!-- 16:9 aspect ratio -->
 			<!-- <div class="embed-responsive embed-responsive-16by9"> -->
 			  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
@@ -754,6 +757,13 @@ var vm = new Vue({
 			}
 		}
 		
+
+		vm.fnGrabHtmlBody = function(htmlText){
+			var tmp;
+			var regexGrabHtmlBody = /(<body[^\>]*>|<\/body>)/ig;
+			return (tmp = htmlText.split(regexGrabHtmlBody)) && tmp && tmp.length >= 2 ? tmp[2] : tmp;
+		}
+
 		vm.getSynonymsDetailsFor = function(item, sura, ayah){
 			if(!item){ return; }
 			var key = sura + ':' + ayah;
@@ -761,12 +771,20 @@ var vm = new Vue({
 				topicId = item.t,
 				topicUrl = item.u;
 			var lookup = qSynonyms.get(topicId);
+			var content = '';
+			$.get( topicUrl )
+				.then(function(content){
+					var iContent = vm.fnGrabHtmlBody(content);
+					console.log([topicUrl, content.length, iContent.length] );
+					vm.synonymsDetail.content = iContent;
+				});
 			return {
 				name: name,
 				topicId: topicId,
 				topicUrl: topicUrl,
 				words: lookup,
 				ref: key,
+				content: content,
 			};
 		}
 		

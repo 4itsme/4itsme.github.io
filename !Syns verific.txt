@@ -2,7 +2,16 @@ Backlog:
 * remove surah, search, page # prefix
 * make settings menu option and feedback under lef menu option
 * on ome page, show list of all surahs
-* 
+* home page surahs list and search bar
+
+
+==================================================
+Verification: Juzz Tabaarak. 5/21/17.
+Topic ayah correction:
+* page 582. ayah 78:1. for the topic: No, nay (id: n28). Link topic n28 to ayah - instead of 78:1, to 78:4
+
+
+==================================================
 
 
 
@@ -40,13 +49,40 @@ Bugs/change requests:
 * reflow the text so we dont see horizontal scrollbar
 * name references are extremely long and distracting
 ----
-* would like to see surah name on top and ayah
 * would like to see links to prev and next asbab entry
-* would like to see how many asbabs in current page and in current surah
-* would like to see listing of all asbabs and ability to see the content on the right.
+* would like to see how many asbabs in current surah
+* DONE: would like to see surah name on top and ayah
+* DONE: would like to see how many asbabs in current page 
+* DONE: would like to see listing of all asbabs and ability to see the content on the right.
 
 =============================================
 Verification: Juzz 3amma. 5/17/17.
+Lesson learnt: anywhere where we have range of ayah is where we see this problem mostly.
+Lesson learnt: highlighting the surah we are currently on ex: 114: throughtout the topic page seems to help in locating word fast.
+
+Topic name mismatch?
+*			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
+*			ayah 89:22 for the topic: Congruence (id: h10). congruence vs. [to have mutual understanding]
+
+
+Topics duplicated or what??
+* 79:42: When; To write; 79:42 for the topic: To write (id: l9). 79:42 for the topic: When (id: k9).
+* ayah 99:1 for the topic: Wood (id: l8). ayah 99:1 for the topic: To tremble, shiver (id: k8). wood (seems missing) and to tremble/shiver
+
+
+Invalid links:
+* p48: link to .it
+
+
+Bugs/change requests:
+* when click next page, it should scroll to top of div; right now it remains stuck where last scrolling left off.
+* when click a topic name, hide the current iframe; show spinning wheel; then show new topic; and might want to reset scrollbar to top.
+* when showing topic, add a cache busting param to it.. ?v=5555. else it will show old cached value.
+
+
+===============================================================
+FIXED and verified: 5/21/17
+Verification: Juzz 3amma that was done on 5/17/17.
 Topic ayah correction:
 * page 582. ayah 78:1. for the topic: No, nay (id: n28). Link topic n28 to ayah - instead of 78:1, to 78:4
 * page 582. ayah 78:6 for the topic: Peg, nail (id: m48). move topic to ayah 78:7
@@ -87,30 +123,9 @@ Topic ayah correction:
 *			ayah 111:4 for the topic: Neck (id: gg3) --> 111:5
 *			ayah 114:4 for the topic: Jinn (id: j13) --> remove 114:5; let other 2 be there.
 -------------- end of last page ---------
-Lesson learnt: anywhere where we have range of ayah is where we see this problem mostly.
-Lesson learnt: highlighting the surah we are currently on ex: 114: throughtout the topic page seems to help in locating word fast.
-
-Topic name mismatch?
-*			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
-*			ayah 89:22 for the topic: Congruence (id: h10). congruence vs. [to have mutual understanding]
 
 
-Topics duplicated or what??
-* 79:42: When; To write; 79:42 for the topic: To write (id: l9). 79:42 for the topic: When (id: k9).
-* ayah 99:1 for the topic: Wood (id: l8). ayah 99:1 for the topic: To tremble, shiver (id: k8). wood (seems missing) and to tremble/shiver
 
-
-Invalid links:
-* p48: link to .it
-
-
-Bugs/change requests:
-* when click next page, it should scroll to top of div; right now it remains stuck where last scrolling left off.
-* when click a topic name, hide the current iframe; show spinning wheel; then show new topic; and might want to reset scrollbar to top.
-* when showing topic, add a cache busting param to it.. ?v=5555. else it will show old cached value.
-
-
-===============================================================
 FIXED and Verified:
 * 2:34 why h17 didnt show up?? {"t":"h17","r":"2:34 76:7 2:59 28:10 28:23 70:1 27:85"},
 
