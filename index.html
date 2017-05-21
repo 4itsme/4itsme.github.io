@@ -307,7 +307,7 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
-		  <div v-if="searchResults && Object.keys(searchResults).length > 0">
+		  <div class=searchResults v-if="searchResults && Object.keys(searchResults).length > 0">
 			  <HR>Search results: <BR>
 			  <div v-for="(matches, key, index) in searchResults">
 				<div v-if="key !== 'keyword'">
@@ -738,6 +738,19 @@ var vm = new Vue({
 					vm.searchResults = results;
 					console.log((vm.message += ((endTime = new moment()) +' results received') ) );
 					vm.message = 'Search time: ' + endTime.diff(startTime, 'seconds') + ' seconds. (' + (endTime - startTime) + ' ms.) ';//moment(startTime).fromNow() + ' ' + vm.message;
+					setTimeout(function(){
+						var hilites = [];
+						hilites.push( vm.searchResults.keyword );
+						hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
+						hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) );
+						hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) );
+
+						//clear out old keywords and set new ones.
+						$('.searchResults').unmark({ "done": function(){
+																$('.searchResults').mark( hilites );
+													 }
+						});
+					}, 200);
 				});
 			  }
 
@@ -783,8 +796,14 @@ var vm = new Vue({
 					console.log([topicUrl, content.length, iContent.length] );
 					vm.synonymsDetail.content = iContent;
 					setTimeout(function(){
-						//now turn on highlighting of sura
-						$('.synonymsDetailContent').mark( [vm.synonymsDetail.ref, vm.synonymsDetail.ref.split(':')[0] + ':' ] ); //hilite the full reference or atleast the sura # matches.
+						//hilite the full reference or atleast the sura # matches.
+						var hilites = [];
+						hilites.push( vm.synonymsDetail.ref );
+						hilites.push( vm.synonymsDetail.ref.split(':')[0] + ':' ); //the sura ref, ex: '3:'
+						$('.synonymsDetailContent').unmark({ "done": function(){//now turn on highlighting of sura
+																$('.synonymsDetailContent').mark( hilites );
+													 }
+						});
 					}, 100);
 				});
 			return {

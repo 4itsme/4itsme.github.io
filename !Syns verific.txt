@@ -4,6 +4,8 @@ Backlog:
 * on ome page, show list of all surahs
 * home page surahs list and search bar
 
+Critical bugs:
+* added search keyword hilighting; BUT when search for munkar after search for bism, the search result ayahs have several ayahs concatenated.
 
 ==================================================
 Verification: Juzz Tabaarak. 5/21/17.
