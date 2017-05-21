@@ -57,7 +57,7 @@
   &nbsp;
   
 
-  Search: <input v-model="keyword" placeholder="Enter search string here..." type=text />
+  Search: <input v-model="keyword" v-on:keyup.enter="go" placeholder='Search "Noah"' type=text />
   <button v-on:click="go">Go</button>  {{keyword}} 
   <input type=checkbox v-model="showTrans" click="showTrans = !showTrans" title="show translation" />Translation
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
