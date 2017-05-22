@@ -172,7 +172,7 @@ var qSynonyms = (function(){
 
 	findTopicsForRef = function(ref){
 		var regexp, ret;
-		regexp = new RegExp(" " + ref + " "); //BUG. disregards ayahs at beginning.
+		regexp = new RegExp("\\b" + ref + "\\b"); //BUG fixed: disregards ayahs at beginning.
 		ret = 
 		_.chain(repo.topicsAyahsMap)
 		 .filter( function(val, key){

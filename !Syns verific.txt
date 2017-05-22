@@ -1,0 +1,170 @@
+Backlog:
+* remove surah, search, page # prefix
+* make settings menu option and feedback under lef menu option
+* on ome page, show list of all surahs
+* home page surahs list and search bar
+
+Critical bugs:
+* added search keyword hilighting; BUT when search for munkar after search for bism, the search result ayahs have several ayahs concatenated.
+
+==================================================
+Verification: Juzz Tabaarak. 5/21/17.
+Topic ayah correction: from pg search562
+* ayah 68:5 for the topic: Lunatic , insanity (id: d36); 68:6
+* ayah 68:15 for the topic: Nose (id: n8) 68:16
+* ayah 68:17 for the topic: except (id: s24) 68:18
+* --- continue from pg 566
+* ayah 69:21 for the topic: Bunch(of grapes etc), ear (of corn) (id: kh19). make it 69:23
+* ayah 69:28 for the topic: To hang, dangle (id: l5). 69:28 only; remove 69:29
+* ayah 69:30 for the topic: Tent, pavilion (id: kh21). 69:31 only.
+* -- continuing from pg 568
+* ayah 69:28 for the topic: To hang, dangle (id: l5). only 69:28, remove 69:29.
+* ayah 69:44 for the topic: To lie, fabricate (id: j27). remove 69:45, 46.
+* ayah 70:10 for the topic: To show/reveal (id: d32). keep 70:11. remove 70:10
+* ayah 70:11 for the topic: Family,tribe (id: q5)70. keep only 70:13 remove prev 2. or remove 70:11.
+* ayah 70:15 for the topic: Skin (id: k32). make it 70:16.
+* ayah 70:36 for the topic: Group (id: j11). 70:37 only; remove other.
+* ayah 72:1 for the topic: plentiful (id: w1). * shud be pointed to 72:16 instead
+* ayah 72:26 for the topic: To like, (id: p17). 72:27
+* ----- continue pg 574
+* ayah 73:12 for the topic: To swallow (id: n26); 73:13
+* ayah 74:4 for the topic: Filth, impurity (id: gg16) 74:5
+* ayah 74:14 for the topic: To keep hope (id: TA6) 74:15
+* ayah 74:21 for the topic: To stroll, to wander (id: p34). 74:23 only; remove other 2.
+* ayah 74:21 for the topic: Scowl, frown (id: t34) 74:22 only
+* ayah 74:33 for the topic: Light, to illuminate (id: r15) 74:34
+* ayah 75:22 for the topic: Beautiful (id: kh15); 75:22 only - remove 75:23
+* ayah 75:31 for the topic: destruction (id: h6). actually 75:34 only.
+* 
+
+Arabic text ltr instead of rtl:
+* ayah 72:1 for the topic: Some, few (id: ch17)
+* ayah 75:16 for the topic: Cause to walk or move (id: ch13)
+
+Translation overlapping the Quran text/nopt staying within its pane:
+* ayah 67:3 for the topic: Layered (id: t26)
+* ayah 75:25 for the topic: To break (id: t24)
+* ayah 67:4 for the topic: To get tired (id: t27)
+==================================================
+
+
+
+Q's:
+
+* 2:68 LABELS seem wrong. topic name "to regard?" for l6 is wrong.
+
+* in s24 article change ref: 2:107 is correct reference not 2:108 for s24. 
+
+* in p54 article, give better title: "To create" nstead of giving birth
+
+* minor. article dd2. has question/comment in it. get clarified. (ayah 2:138 for the topic: To drown, dip (id: dd2))
+.........................................
+
+* in article SA1, remove the heading.. SAAD. adds no benefit. see ayah 3:141 for the topic: To cleanse, wipe (id: SA1)
+
+* general: 
+	- remove .to spurious hyperlinks.
+	- remove the margin spacings all around.
+	- remove the odd colors, fonts etc.
+
+* minor. seems to be no entry for sawm/fast. Near Synonyms found in ayah 9:112 for the topic: Fasting person (id: r16)	
+
+
+
+===============================================================
+Verification: Asbab un Nuzul - Juzz 3amma
+
+* Seems like asbab in same sura are somewhat clubbed together; 
+	- see asbab for [83:1]. it has asbab for next verse too looks like.
+	- see asbab for [92:5-6] -- writeup has mention of asbab for [92:19-21].
+
+Bugs/change requests:
+* page numbers come in middle of topic and interrupt flow
+* reflow the text so we dont see horizontal scrollbar
+* name references are extremely long and distracting
+----
+* would like to see links to prev and next asbab entry
+* would like to see how many asbabs in current surah
+* DONE: would like to see surah name on top and ayah
+* DONE: would like to see how many asbabs in current page 
+* DONE: would like to see listing of all asbabs and ability to see the content on the right.
+
+=============================================
+Verification: Juzz 3amma. 5/17/17.
+Lesson learnt: anywhere where we have range of ayah is where we see this problem mostly.
+Lesson learnt: highlighting the surah we are currently on ex: 114: throughtout the topic page seems to help in locating word fast.
+
+Topic name mismatch?
+*			ayah 84:14 for the topic: To stroll, to wander (id: p34). article heading is 'to turn oneself. phirna'
+*			ayah 89:22 for the topic: Congruence (id: h10). congruence vs. [to have mutual understanding]
+
+
+Topics duplicated or what??
+* 79:42: When; To write; 79:42 for the topic: To write (id: l9). 79:42 for the topic: When (id: k9).
+* ayah 99:1 for the topic: Wood (id: l8). ayah 99:1 for the topic: To tremble, shiver (id: k8). wood (seems missing) and to tremble/shiver
+
+
+Invalid links:
+* p48: link to .it
+
+
+Bugs/change requests:
+* when click next page, it should scroll to top of div; right now it remains stuck where last scrolling left off.
+* when click a topic name, hide the current iframe; show spinning wheel; then show new topic; and might want to reset scrollbar to top.
+* when showing topic, add a cache busting param to it.. ?v=5555. else it will show old cached value.
+
+
+===============================================================
+FIXED and verified: 5/21/17
+Verification: Juzz 3amma that was done on 5/17/17.
+Topic ayah correction:
+* page 582. ayah 78:1. for the topic: No, nay (id: n28). Link topic n28 to ayah - instead of 78:1, to 78:4
+* page 582. ayah 78:6 for the topic: Peg, nail (id: m48). move topic to ayah 78:7
+* 			ayah 78:12 for the topic: Light, to illuminate (id: r15). 78:12 --> 78:13
+* 			ayah 78:24 for the topic: Water and its different types (id: p5) --> 78:25.
+*			ayah  79:31 for the topic: Benefit, to give benefit (id: f1) --> 79:33
+* 			ayah 79:40 for the topic: Wish/desire/hope (id: kh14) --> remove 79:41. let 79:40 stay.
+*			ayah 80:15 for the topic: Pious, virtuous (id: n32) --> 80:16
+*			ayah 80:21 for the topic: Bring to live (id: z8) --> 80:22
+*			ayah 80:24 for the topic: To fall, cause to fall (id: gg7) --> 80:25
+* 			ayah 80:27 for the topic: vegetables (id: t11) --> 80:28
+* 			ayah 80:32 for the topic: Fodder, grains – food for herbivores (id: ch3). leave 80:32, leave 80:31.
+*			ayah 80:40 for the topic: black (id: s26). --> 80:41
+*			--- @paused page 586 ---
+*			ayah 82:7 for the topic: To join, mix, blend (id: m39). --> 82:8.
+*			ayah 84:1 for the topic: To be capable (id: l3) --> 84:2
+*			ayah 85:21 for the topic: Divine tablet recording and its various names (id: l14) --> 85:22
+*			ayah 86:5 for the topic: To come out (id: n22) --> 86.6
+*			ayah 87:4 for the topic: Violently smashed or broken into minute pieces (id: ch20) --> 87:5. remove 87:4
+*			ayah 87:4 for the topic: Fodder, grains – food for herbivores (id: ch3) --> 87:5. remove 87:4.
+*			ayah 88:21 for the topic: Superintendent (id: d2) --> 88:22
+*			ayah 88:25 for the topic: Doomsday and its different names (id: q16) --> 88:26
+*			ayah 89:1 for the topic: Couple, pair (id: j19) --> 89:3 only; remove 89:1,2
+*			ayah 90:11 for the topic: Hill and types (id: tt6) --> remove 90:11, leave 90:10
+*			ayah 90:14 for the topic: Poor, destitute (id: t21) --> 90:16 only. not 90:14.
+*			ayah 91:1 for the topic: Ensue, to come after (id: p48) --> 91:2
+*			--- @paused page 596 ---
+*			ayah 93:1 for the topic: Spread of darkness (id: t2) --> remove 93:1; only 93:2
+*			ayah 94:7 for the topic: To incline (id: r12) --> 94:8 only
+*			ayah 95:4 for the topic: Under, lowest (id: n30) --> 95:5 only
+*			ayah 98:2 for the topic: Strong, fixed (id: m31) --> 98:3 only
+*			ayah 101:11 for the topic: To know (id: j2) --> remove 101:11; only 101:10
+*			ayah 102:1 for the topic: To see, look (id: d30) --> 102:2 only; remove 102:1
+*			ayah 105:4 for the topic: Groups of animals (id: j12) --> remove 105:4; only 105:3
+*			ayah 106:1 for the topic: Cold , winter (id: s14) --> 106:2 only; remove 106:1
+*			ayah 107:6 for the topic: Goods, provisions (id: s4) --> 107:7 only
+*			ayah 108:3 for the topic: To slaughter (id: dh1) --> should be 108:2; off by one
+*			ayah 111:4 for the topic: Neck (id: gg3) --> 111:5
+*			ayah 114:4 for the topic: Jinn (id: j13) --> remove 114:5; let other 2 be there.
+-------------- end of last page ---------
+
+
+
+FIXED and Verified:
+* 2:34 why h17 didnt show up?? {"t":"h17","r":"2:34 76:7 2:59 28:10 28:23 70:1 27:85"},
+
+* why 2:54 doesnt have link to [ayah 2:117 for the topic: To create (id: p54)]
+	{"t":"p54","r":"2:54 2:117 30:30 35:1 4:1 5:110 23:14 6:98 43:18 56:72 7:179 67:24"},
+	Any reference at beginning isnt showing link! like 2:34 above.
+	
+* 2:50 link missing to topic dd2.. ayah 2:138 for the topic: To drown, dip (id: dd2)

@@ -10,18 +10,32 @@
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
   <link rel="stylesheet" href="libcss/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="libcss/font-awesome-4.7.0/css/font-awesome.min.css">
+  <style>
+	  mark, .mark{
+	       background: #ff0!important;
+	   }
+  </style>
 </head>
 
 <body>  
 <div id="app-1" class="container-fluid">
-  <H2>Q viewer</H2>
+  <!--<H2>Q viewer</H2>-->
   <!-- Sura dropdown   -->
-  Sura #: &nbsp;
-  <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
-    <option v-for="sura in 114" v-bind:value="sura">
-	  {{ sura }}
-    </option>
-  </select>
+  <!--Sura #: &nbsp;-->
+  <span v-if="suras && suras.length > 0">
+    <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
+      <option v-for="sura in suras" v-bind:value="sura.value">
+	    {{ sura.name }}
+      </option>
+    </select>
+  </span>
+  <span v-else="">
+	  <select v-model="queryData.sura" @change="queryData.ayah = 1; onChange('sura')">
+		<option v-for="sura in 114" v-bind:value="sura">
+		  {{ sura }}
+		</option>
+	  </select>
+  </span>
 
 <!-- Ayah dropdown -->
 <!-- <select vbind="currentAyah" @@change="onChange('ayah')"> -->
@@ -43,12 +57,14 @@
   &nbsp;
   
 
-  Search: <input v-model="keyword" placeholder="Enter search string here..." type=text />
+  <!-- Search: -->
+  <input v-model="keyword" v-on:keyup.enter="go" placeholder='Search "Noah"' type=text />
   <button v-on:click="go">Go</button>  {{keyword}} 
   <input type=checkbox v-model="showTrans" click="showTrans = !showTrans" title="show translation" />Translation
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
-  <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab" title="show Asbab (Sababun Nuzul)" />Asbab
-  <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms" title="show transliteration" />Synonyms
+  <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab; tab = 'asbab';" title="show Asbab (Sababun Nuzul)" />Asbab
+  <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms; tab = 'synonyms';" title="show transliteration" />Synonyms
+  <input type=checkbox v-model="showCorpus" click="showCorpus = !showCorpus" title="show transliteration" />Grammar
   <span v-if='isLoading'>
 	<ul class="fa-ul">
 		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
@@ -58,31 +74,112 @@
   </span>{{message}}
 
   <HR>
-  <div>
+  <div class="col-md-7">
 	<div v-if="ayahsListFromPage">
 		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
-		<div style="overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
-			<div v-for="(verse, verseIndex) in ayahsListFromPage">
-				
+		<div dir=rtl class='quranpage clearfix' style="text-align: justify; overflow:scroll; max-height:550px; XXXwhite-space: nowrap;">
+			<span v-for="(verse, verseIndex) in ayahsListFromPage" Xstyle="display:inline-block; float: right;">
+				<!-- show basmallah -->
+				<span v-if="showAr && verse.isBasmallah">
+						<div id="bismillah" class="bismillah text-center word-font" style="text-align:center; font-size: 42px;" title="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" >
+							<HR>
+							﷽
+							<HR>
+						</div>
+				</span>
+
+				<!-- show arabic ayah -->
+				<span v-if="verse.BUCK" dir="rtl">
+					
+					<span v-if="showTrans || showTranslit" style=font-size:.96em >
+						{{ verse.surah }}:{{ verse.ayah }} &nbsp; 
+					</span>
+					<span style=direction:rtl;font-size:2.35em >{{ showAr ? verse.AR : verse.BUCK }}</span>
+					<span v-if="true || (!showTrans && !showTranslit)" :title="'Ayah ref: ' + verse.surah + ':'+ verse.ayah"  style=font-size:.96em >
+						<span>﴿</span>{{ verse.ayah }}<span>﴾</span>
+					</span>
+
+					<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
+						<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
+							<!-- [A] -->
+							<span style="cursor:pointer" class="label label-warning" >ASB</span>
+						</A>
+						
+					</span>
+					<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+						<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
+							<!-- [S] -->
+							<span style="cursor:pointer" class="label label-info" >SYN</span>
+						</A> <!--&nbsp; &nbsp;<BR>
+						<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
+							<span v-for="item in first">
+								<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, verse.surah, verse.ayah)">
+									<span class="label label-success">
+										{{item.n}}<span class="badge">{{ getSynonymsDetailsFor(item, verse.surah, verse.ayah).words.length }}</span>
+									</span>
+								</A>&nbsp; &nbsp;
+								<!--<span v-for="word in getSynonymsDetailsFor(item, verse.surah, verse.ayah).words">
+									<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	<!--
+									<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+										<span class="label label-info" :title="word.word">
+											{{word.wordEn}}
+										</span>
+									</A>&nbsp;
+								</span>--><!--
+							</span>
+						</span> -->
+						
+					</span>
+				</span>
+
+				<!-- show translation, translit etc -->
+				<span v-if="verse.BARE" v-html="">	</span>
+				<span v-if="verse.TRANS" >
+					<div v-if="showTrans" dir=ltr>{{ verse.TRANS }}</div>
+				</span>
+				<span v-if="verse.TRANSLIT" >
+					<div v-if="showTranslit" dir=ltr v-html="verse.TRANSLIT"></div>
+				</span>
+				<span v-if="verse.CORPUS" >
+					<div v-if="showCorpus" dir=rtl>
+						<!--{{ verse.CORPUS }}-->
+						<span v-for="(word, wordIndex) in qCorpus.parseEx( verse.CORPUS )">
+							<!-- {{ word }} -->
+							<span :title=" word.en +'\n'+ word.score +'\n'+ word.scoreVerb +'\n\n' + JSON.stringify(word) ">
+								{{ word.ar }}
+							</span>
+						</span>
+					</div>
+				</span>
+
+
+<!--
 				<span v-for="(ayah, prop, ayahindex) in getVerse(verse.verseNo)">
-					<div dir=rtl v-if="prop == 'BUCK'" dir="rtl" >
-						<span style=font-size:1em >{{ verse.surah }}:{{ verse.ayah }} &nbsp; </span>
+					<span v-if="prop == 'BUCK'" dir="rtl">
+						
+						<span v-if="showTrans || showTranslit" style=font-size:.96em >
+							{{ verse.surah }}:{{ verse.ayah }} &nbsp; 
+						</span>
 						<span style=direction:rtl;font-size:2.35em >{{ayah}}</span>
+						<span v-if="true || (!showTrans && !showTranslit)" :title="'Ayah ref: ' + verse.surah + ':'+ verse.ayah"  style=font-size:.96em >
+							<span>﴿</span>{{ verse.ayah }}<span>﴾</span>
+						</span>
+
 						<span v-show="showAsbab && currentPageAsbab.join(' ').indexOf(' ' + verse.surah + ':' + verse.ayah + ' ') != -1">
-							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah)" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
-								<!-- [A] -->
-								<span style="cursor:pointer" class="label label-warning" >ASBAB</span>
+							<A HREF="#" @click="showAsbabFor(verse.surah, verse.ayah); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.8em >
+								<!-- [A] --><!--
+								<span style="cursor:pointer" class="label label-warning" >ASB</span>
 							</A>
 							
 						</span>
 						<span v-show="showSynonyms && _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
-							<A HREF="#" @click="showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
-								<!-- [S] -->
-								<span style="cursor:pointer" class="label label-info" >SYNMS</span>
-							</A> &nbsp; &nbsp;<BR>
+							<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(null, verse.surah, verse.ayah)" title="Click to see Near Synonyms for some words in this Ayah." style=font-size:.8em >
+								<!-- [S] --><!--
+								<span style="cursor:pointer" class="label label-info" >SYN</span>
+							</A> <!--&nbsp; &nbsp;<BR>
 							<span v-for="first in _.find(currentPageSynonyms, verse.surah + ':' + verse.ayah)">
 								<span v-for="item in first">
-									<A HREF="#" @click="showSynonymsFor(item, verse.surah, verse.ayah)">
+									<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, verse.surah, verse.ayah)">
 										<span class="label label-success">
 											{{item.n}}<span class="badge">{{ getSynonymsDetailsFor(item, verse.surah, verse.ayah).words.length }}</span>
 										</span>
@@ -94,61 +191,219 @@
 												{{word.wordEn}}
 											</span>
 										</A>&nbsp;
-									</span>-->
+									</span>--><!--
 								</span>
-							</span>
-							
+							</span> -->
+<!--							
 						</span>
-					</div>
+					</span>
+					<span v-if="prop == 'isBasmallah'">
+						<div v-if="ayah" id="bismillah" class="bismillah text-center word-font" style="text-align:center;" title="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" >
+							<HR>
+							﷽
+							<HR>
+						</div>
+					</span>
 					<span v-else-if="prop == 'BARE'" v-html="">	</span>
 					<span v-else-if="prop == 'TRANS'" >
-						<div v-if="showTrans">{{ ayah }}</div>
+						<div v-if="showTrans" dir=ltr>{{ ayah }}</div>
 					</span>
 					<span v-else-if="prop == 'TRANSLIT'" >
-						<div v-if="showTranslit" v-html="ayah"></div>
+						<div v-if="showTranslit" dir=ltr v-html="ayah"></div>
 					</span>
 					<span v-else>
 						{{ayah}} 
 					</span>
-				</span>	<BR>
-			</div>
+				</span>	
+-->
+				<span v-if="showTrans || showTranslit" >
+					<BR/>
+				</span>
+			</span>
 		</div>
 		<button v-show="queryData.page !== 604" @click="queryData.page = queryData.page >= 604 ? 604 : queryData.page + 1; onChange('page');">Next page</button>
 	</div>
-</div>
+  </div>
 
-<div v-if="showAsbabDetail">
-	<BR/>
-	Sabab Nuzul details for selected Ayah:<BR>
-	<PRE>{{asbabDetail}}</PRE>
-	<BR/>
-</div>
+<div class="col-md-5">
 
-<div v-if="showSynonymsDetail">
-	<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
-	Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
-	<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
-	
-	<span v-for="word in synonymsDetail.words">
-		<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
-		<span class="label label-info" :title="word.word">
-			{{word.wordEn}}
-		</span>
-	</A>&nbsp;
-	</span>
-					
-	<!-- 16:9 aspect ratio -->
-	<!-- <div class="embed-responsive embed-responsive-16by9"> -->
-	  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
-	<!-- </div>					 -->
-	<!-- 4:3 aspect ratio -->
-	<div class="embed-responsive embed-responsive-4by3">
-	  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+
+	<ul class="nav nav-tabs" id="myTab">
+	  <li v-bind:class="{ active: tab === 'asbab' }" @click="tab = 'asbab'"><a data-target="#asbab" data-toggle="tab">Asbab</a></li>
+	  <li v-bind:class="{ active: tab === 'synonyms' }" @click="tab = 'synonyms'"><a data-target="#synonyms" data-toggle="tab">Synonyms</a></li>
+	  <li v-bind:class="{ active: tab === 'search' }" @click="tab = 'search'"><a data-target="#search" data-toggle="tab">Search results</a></li>
+	  <li v-bind:class="{ active: tab === 'misc' }" @click="tab = 'misc'"><a data-target="#misc" data-toggle="tab">Misc</a></li>
+	  <li v-bind:class="{ active: tab === 'about' }" @click="tab = 'about'"><a data-target="#about" data-toggle="tab">About</a></li>	
+	</ul>
+
+
+	<div class="tab-content">
+	  
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'asbab' }" id="asbab">
+	  	<div>
+	  		Asbab-un-Nuzul in current page:
+	  		<span v-for="asbab in currentPageAsbab">
+	  			<span v-if="asbab">
+	  				<A HREF="#" @click="showAsbabFor(asbab.split(':')[0], asbab.split(':')[1]); tab='asbab';" title="Click to see Sabab Nuzul for this Ayah" style=font-size:.93em >
+						<span class="label label-warning" style="cursor: pointer;">{{asbab}}</span> &nbsp;
+					</A>
+	  			</span>
+	  		</span>
+	  	</div>
+		<div v-if="showAsbabDetail">
+			<BR/>
+			Sabab Nuzul details for selected Ayah: 
+			<button class="btn btn-default pull-right" @click='showAsbabPretty = !showAsbabPretty'>Show {{ showAsbabPretty ? 'raw' : 'formatted' }}</button><BR><HR>
+			<span v-if='showAsbabPretty'>
+				<span v-html='asbabDetail.pretty'></span>
+			</span>
+			<span v-else>
+				<PRE>{{ asbabDetail.raw }}</PRE>
+			</span>
+		</div>
+		<div v-else>Asbab shown here if available</div>
+	  </div>
+	  
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'synonyms' }" id="synonyms">
+	  	<div>
+	  		Near Synonyms in current page:
+			<span v-for="(first, index1) in currentPageSynonyms">
+				<span v-for="(subItem, subKey) in first">
+					<BR>{{ subKey }}: 
+					<span v-for="(item, key) in subItem">
+						<A HREF="#" @click="tab = 'synonyms'; showSynonymsFor(item, subKey.split(':')[0], subKey.split(':')[1])">
+							<span class="label label-info">
+								{{item.n}}
+								<!--<span class="badge">{{ getSynonymsDetailsFor(item, key.split(':')[0], key.split(':')[1]).words.length }}</span>-->
+							</span>
+						</A>&nbsp; &nbsp;
+						<!--<span v-for="word in getSynonymsDetailsFor(item, verse.surah, verse.ayah).words">
+							<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	<!--
+							<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+								<span class="label label-info" :title="word.word">
+									{{word.wordEn}}
+								</span>
+							</A>&nbsp;
+						</span>-->
+					</span>
+				</span>
+			</span>
+	  	</div>
+		<div class=synonymsDetail v-if="showSynonymsDetail && synonymsDetail">
+			<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
+			Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
+			<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
+			
+			<span v-for="word in synonymsDetail.words">
+				<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
+				<span class="label label-success" :title="word.word">
+					{{word.wordEn}}
+				</span>
+			</A>&nbsp;
+			</span>
+			
+			<HR>
+			<span class='synonymsDetailContent' v-html='synonymsDetail.content'></span>
+			<HR>
+			<!-- 16:9 aspect ratio -->
+			<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+			  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
+			<!-- </div>					 -->
+			<!-- 4:3 aspect ratio -->
+			<div class="embed-responsive embed-responsive-4by3">
+			  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+			</div>
+			<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
+			<BR/>
+		</div>
+		<div v-else>Synonyms info shown here if available</div>
+	  </div>
+
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
+		  <div class=searchResults v-if="searchResults && Object.keys(searchResults).length > 1">
+			  <HR>Search results: <BR>
+			  <div v-for="(matches, key, index) in searchResults">
+				<div v-if="key !== 'keyword'">
+					<BR>
+					{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
+					<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;" :dir="key === 'arabic' || key === 'arabicBuckTranslit' ? 'rtl' : 'ltr'">
+						<div v-for="match in matches">
+							<!-- {{match}} -->
+							<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
+								{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
+							</A>
+							{{ key === 'arabic' || key === 'arabicBuckTranslit' ? qUtil.EnToAr( match.split('|')[2] ) : match.split('|')[2] }}
+						</div>
+					</div>
+					<BR>
+				</div>
+			  </div>
+			  <HR>
+		  </div>
+		  <div v-else>Search results shown here if available</div>
+		  <div v-if="searchResults.searching">
+		  	<i class="fa fa-spinner fa-pulse"></i>Searching...
+		  </div>
+	  </div>
+
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
+		  <div v-if="rootLemResults && rootLemResults.length > 0">
+			  <HR>Dictionary lookup results: <BR>
+			  <!-- {{ rootLemResults }} -->
+			  ROOT:{{rootLemResults.length > 0 ? rootLemResults[0].root : '-'}}, Instances: {{rootLemResults.length > 0 ? rootLemResults[0].rootInstances : '-'}}
+			  <div v-for="(match, key, index) in rootLemResults">
+				<A href=# @click='goRootToLem(match, key, index);' v-bind:title='match.verse'>
+					LEM:{{match.lem}}
+				</A>, Instances: {{match.lemInstances}}
+			  </div>
+			  <HR>
+		  </div>
+		  
+		  <div v-if="lemResults && Object.keys(lemResults).length > 0">
+			<HR>Dictionary Lemma lookup results: {{ Object.keys(lemResults).length}}<BR>
+				<!-- {{ lemResults }} -->
+				
+				<div v-if="lemResults && Object.keys(lemResults).length > 0" style="overflow:scroll; max-height:200px; white-space: nowrap;">
+					<div v-for="(match, key, index) in lemResults">
+						<A href=# @click='goLem(match, key, index);' v-bind:title='match.verse'>
+							{{match.surah}}:{{match.ayah}}:{{match.word}}
+						</A>
+						{{match.snippet.substring(0,100)}}
+					</div>
+				</div>
+			 <HR>
+		  </div>
+
+		  <div v-else>Misc details shown here if available</div>
+
+		  <div v-show="debug">
+			  {{queryData}}
+			  {{ref}}
+			  Asbab: {{currentPageAsbab}}
+			  Synonyms: {{currentPageSynonyms}}
+			  <!-- <PRE> -->
+				<!-- {{asbabDetail}} -->
+			  <!-- </PRE> -->
+		  </div>
+	  </div>
+
+	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'about' }" id="about">
+	  	About.. content coming soon. <BR><BR>
+	  	In the meanwhile, feel free to leave feedback below.<BR><BR>
+
+		<div id=contact form>
+			<form method="POST">
+			  <!--<meta name="referrer" content="origin" /> -->
+			  <input v-model="feedbackEmail" type="email" name="email" placeholder="Your email (optional)"><BR><BR>
+			  <textarea v-model="feedbackMessage" name="message" placeholder="Your message"></textarea><BR><BR>
+			  <button v-on:click.stop.prevent="feedbackOnSubmit()" >Send</button>
+			</form>
+		</div>
+
+	  </div>
+
 	</div>
-	<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
-	<BR/>
 </div>
-
 
 <!--<span XXv-bind:style="!ayah.scoreVerb || ayah.scoreVerb < 0 ? 'color:lightgray' : ayah.scoreVerb <= 15 ? 'color:YellowGreen' : 'color:brown' " 
 				   vbind:style="'opacity:' + (!ayah.scoreVerb || ayah.scoreVerb < 0 ? '0.2' : ayah.scoreVerb <= 15 ? '0.5' : '1') " 
@@ -158,64 +413,7 @@
   <!-- {{ayahsListFromPage}} -->
   <!-- <HR> -->
 
-  <div v-if="rootLemResults && rootLemResults.length > 0">
-	  <HR>Dictionary lookup results: <BR>
-	  <!-- {{ rootLemResults }} -->
-	  ROOT:{{rootLemResults.length > 0 ? rootLemResults[0].root : '-'}}, Instances: {{rootLemResults.length > 0 ? rootLemResults[0].rootInstances : '-'}}
-	  <div v-for="(match, key, index) in rootLemResults">
-		<A href=# @click='goRootToLem(match, key, index);' v-bind:title='match.verse'>
-			LEM:{{match.lem}}
-		</A>, Instances: {{match.lemInstances}}
-	  </div>
-	  <HR>
-  </div>
   
-  <div v-if="lemResults && Object.keys(lemResults).length > 0">
-	<HR>Dictionary Lemma lookup results: {{ Object.keys(lemResults).length}}<BR>
-		<!-- {{ lemResults }} -->
-		
-		<div v-if="lemResults && Object.keys(lemResults).length > 0" style="overflow:scroll; max-height:200px; white-space: nowrap;">
-			<div v-for="(match, key, index) in lemResults">
-				<A href=# @click='goLem(match, key, index);' v-bind:title='match.verse'>
-					{{match.surah}}:{{match.ayah}}:{{match.word}}
-				</A>
-				{{match.snippet.substring(0,100)}}
-			</div>
-		</div>
-	 <HR>
-  </div>
-  
-  <div v-if="searchResults && Object.keys(searchResults).length > 0">
-	  <HR>Search results: <BR>
-	  <div v-for="(matches, key, index) in searchResults">
-		<div v-if="key !== 'keyword'">
-			<BR>
-			{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
-			<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;">
-				<div v-for="match in matches">
-					<!-- {{match}} -->
-					<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
-						{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
-					</A>
-					{{ match.split('|')[2] }}
-				</div>
-			</div>
-			<BR>
-		</div>
-	  </div>
-	  <HR>
-  </div>
-  
- <BR>
-  <DIV v-show="debug">
-	  {{queryData}}
-	  {{ref}}
-	  Asbab: {{currentPageAsbab}}
-	  Synonyms: {{currentPageSynonyms}}
-	  <!-- <PRE> -->
-		<!-- {{asbabDetail}} -->
-	  <!-- </PRE> -->
-  </DIV>
 
   
 </div>
@@ -224,9 +422,10 @@
 var vm = new Vue({
   el: '#app-1',
   data: {
+  	showAr: true,
 	sura:1,
 	page:1,
-	keyword: 'LEM:{som',//null,
+	keyword: null,
 	searchResults: {},
 	rootLemResults: {},
 	lemResults: {},
@@ -237,8 +436,10 @@ var vm = new Vue({
 	showArabic: true,
 	showTrans: false,
 	showTranslit: false,
+	showCorpus: true,
 	showAsbab: true,
-	showSynonyms: false,
+	showAsbabPretty: true,
+	showSynonyms: true,
 	currentPageAsbab: [],
 	showAsbabDetail: false,
 	asbabDetail: "",
@@ -246,10 +447,16 @@ var vm = new Vue({
 	showSynonymsDetail: false,
 	synonymsDetail: "",
 	_: { find:function(){} },
+	qUtil:{},
+	qCorpus:{},
 	currentPageSynonymsDetails: [],
-	
+	tab: 'about',
+	feedbackEmail: '',
+	feedbackMessage: '',
+	feedbackOnSubmit: function(){},
+
 	currentVerse: 1,
-	queryData: {sura: 0, ayah: 0, word: 0, page: 0},
+	queryData: {sura: 1, ayah: 1, word: 1, page: 1},
 	ayahsCount: 7,
 	ayahsListFromPage: [{sura: 1, ayah: 1, verse: 1}],
 	
@@ -344,25 +551,39 @@ var vm = new Vue({
   <script src="lib/jquery.min.js"></script>
   <!-- Latest compiled and minified JavaScript -->
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-  <script src="zdata/libcss/bootstrap-3.3.7-dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="libcss/bootstrap-3.3.7-dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src='lib/lodash.min.js'></script>
   <script src='lib/moment.min.js'></script>
   <!-- <script src="lib/underscore-min.js"></script> -->
+  <script src='lib/jquery.mark.min.js'></script>
+  <!--<script src='http://www.jsdelivr.com/projects/mark.js'></script>-->
+  <!--<script stc='https://cdnjs.com/libraries/mark.js/'></script>-->
   <script src='zdata/main.js'></script>
   
   <script>
 	if(qMain){
-		qMain.init('http://localhost:8080/', 'zdata/');
+		var remote = 'https://4itsme.github.io',
+			origin = (location.origin === "http://localhost:8080" || location.href.startsWith('http://localhost:8080') ) ? location.origin : remote;
+		qMain.init(origin + '/', 'zdata/');
 		qMain.go(function(){
 			vm.isLoading = false;
-			vm && vm.go();
+			//vm && vm.go();
+			
+			vm.suras = _.chain( _.range(1, 115) )
+						.map( function(s){
+							var det = Q.surah.detail( s );
+							return _.extend( det, { 
+								name: s + '. ' + det.english_name +'  '+ det.arabic_name,
+								value: s
+							} );
+						 })
+						.value() || [];
+			vm.qUtil = qUtil;
+			vm.qCorpus = qCorpus;
 		});
-		var showAr = true;
 		if(vm){
 			vm._ = _;
-			//vm.go();
-			
-			vm.suras = []; 
+			vm.suras = [];
 			
 			onChangeSura = function(vm){
 				vm.queryData.page = Q.ayah.page(vm.queryData.sura, vm.queryData.ayah ? vm.queryData.ayah : 1);
@@ -378,7 +599,6 @@ var vm = new Vue({
 			vm.getVerse = function(verseNo){
 				var result = typeof(qSearch) !== 'undefined' && qSearch.lookup(verseNo); 
 				if(result){
-					result.BUCK = showAr ? qUtil.EnToAr(result.BUCK) : result.BUCK;
 					result.TRANS = !result.TRANS ? '' : result.TRANS.split('|')[2];
 					result.TRANSLIT = !result.TRANSLIT ? '' : result.TRANSLIT.split('|')[2];
 				}
@@ -413,6 +633,21 @@ var vm = new Vue({
 				//this.queryData.sura = _.first(this.ayahsListFromPage).surah;
 				//this.queryData.ayah = _.first(this.ayahsListFromPage).ayah;
 				
+				//now populate the ayah details for each ayah
+				_.each(this.ayahsListFromPage, function(verse){
+					//existing verse properties: ayah, surah, verseNo
+					var verseEx = vm.getVerse(verse.verseNo);
+
+					var basmallah = 'bisomi {ll~ahi {lr~aHoma`ni {lr~aHiymi ',
+						isBasmallah = verse.ayah == 1 && verseEx.BUCK && verseEx.BUCK.startsWith( basmallah );
+					if(isBasmallah){ verseEx.BUCK = verseEx.BUCK.substring( basmallah.length ); }
+					
+					verseEx.AR = qUtil.EnToAr( verseEx.BUCK );
+					verseEx.BARE = qUtil.BuckToBare( verseEx.BUCK );
+
+					verse = _.extend(verse, {isBasmallah: isBasmallah}, verseEx );
+				});
+
 				//now find out if any Asbab for this page as an async call
 				if(vm.showAsbab) 
 				qAsbab.findForPageAsync( page )
@@ -449,9 +684,12 @@ var vm = new Vue({
 	
 			
 			vm.go = function () {
-			  var keyword = vm.keyword.trim(); //this will break IE compat; needs polyfill
+			  vm.message = "";
+			  vm.searchResults = {};
+			  var keyword = (vm.keyword || "").trim(); //this will break IE compat; needs polyfill
+			  if(!keyword || keyword === ""){ return; }
 			  var regEx = new RegExp(/^(\d*)\:(\d*)(?:(?:\:(\d*))?)$/);
-			  if( regEx.test(keyword) ){
+			  if( regEx.test(keyword) ){//the search keyword is an ayah reference.. display it.
 				var temp = keyword.match(regEx); // /(\d*)\:(\d*)\:(\d*)/),
 					loc ={sura: +temp[1], ayah: +temp[2], word: temp.length >= 3 ? +temp[3] : null };
 				vm.queryData.ayah = loc.ayah; //also change numAyahs
@@ -459,7 +697,8 @@ var vm = new Vue({
 				//vm.queryData.page = Q.ayah.page(loc.surah, loc.ayah);	
 				//vm.onChange('page');
 			  }
-			  else if(keyword.indexOf('LEM:') != -1){
+			  else if(keyword.indexOf('LEM:') != -1){//keyword is a Lemma search
+			  	vm.tab = 'misc';
 				//potential Lemma search
 				var pattern = keyword,				
 					//pattern = 'LEM:tasomiyap', //'LEM:m~usam~FY|ROOT:smw', //'LEM:sam~aY`|ROOT:smw'; //'ROOT:smw'; //'LEM:r~aHiym|ROOT:rHm';
@@ -500,8 +739,8 @@ var vm = new Vue({
 				vm.lemResults = results;
 				
 			  }
-			  else if(keyword.indexOf('ROOT:') != -1 || keyword.length === 3){
-				//potential Root Lem search...
+			  else if(keyword.indexOf('ROOT:') != -1 ){//|| keyword.length === 3){
+				vm.tab = 'misc';//potential Root Lem search...
 				var query = { root: keyword.replace('ROOT:', '') };
 				var o = typeof(qRootLemDict) !== 'undefined' && qRootLemDict.lookup(query);
 				o = o && _.map(o.lems, function(lem, index){
@@ -510,16 +749,32 @@ var vm = new Vue({
 				vm.rootLemResults = o;	
 			  }
 			  else{
-				var startTime, endTime, message = '';
+			  	vm.tab = 'search'; vm.searchResults = {searching: true};
+				var startTime = new moment(), endTime, message = '';
 				  //vm.searchResults = qSearch.search(keyword);
 				//console.log((message = 'Searching...' /*(startTime = new moment()) +' request fired. '*/) );
 				vm.isLoading = true;
 				//vm.message = message;
 				qSearch.searchAsync(keyword).then(function(results){
 					vm.isLoading = false;
-					vm.searchResults = results;
+					vm.searchResults = results || {};
+					vm.searchResults.searching = false;
 					console.log((vm.message += ((endTime = new moment()) +' results received') ) );
+					if(!(endTime - startTime))debugger;
 					vm.message = 'Search time: ' + endTime.diff(startTime, 'seconds') + ' seconds. (' + (endTime - startTime) + ' ms.) ';//moment(startTime).fromNow() + ' ' + vm.message;
+					setTimeout(function(){
+						var hilites = [];
+						hilites.push( vm.searchResults.keyword );
+						hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
+						hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) );
+						hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) );
+
+						//clear out old keywords and set new ones.
+						$('.searchResults').unmark({ "done": function(){
+																$('.searchResults').mark( hilites );
+													 }
+						});
+					}, 200);
 				});
 			  }
 
@@ -534,28 +789,70 @@ var vm = new Vue({
 		}
 				
 		vm.showSynonymsFor = function(item, sura, ayah){
-			var details = vm.getSynonymsDetailsFor(item, sura, ayah);
-			vm.showSynonymsDetail = true;
-			vm.synonymsDetail = details;
+			if(item){
+				var details = vm.getSynonymsDetailsFor(item, sura, ayah);
+				vm.showSynonymsDetail = true;
+				vm.synonymsDetail = details;
+			}else{
+				var key = sura + ':' + ayah;
+				_.first( vm.currentPageSynonyms, key);
+			}
 		}
 		
+
+		vm.fnGrabHtmlBody = function(htmlText){
+			var tmp;
+			var regexGrabHtmlBody = /(<body[^\>]*>|<\/body>)/ig;
+			return (tmp = htmlText.split(regexGrabHtmlBody)) && tmp && tmp.length >= 2 ? tmp[2] : tmp;
+		}
+
 		vm.getSynonymsDetailsFor = function(item, sura, ayah){
+			if(!item){ return; }
 			var key = sura + ':' + ayah;
 			var name = item.n,
 				topicId = item.t,
 				topicUrl = item.u;
 			var lookup = qSynonyms.get(topicId);
+			var content = '';
+			$.get( topicUrl )
+				.then(function(content){
+					var iContent = vm.fnGrabHtmlBody(content);
+					console.log([topicUrl, content.length, iContent.length] );
+					vm.synonymsDetail.content = iContent;
+					setTimeout(function(){
+						//hilite the full reference or atleast the sura # matches.
+						var hilites = [];
+						hilites.push( vm.synonymsDetail.ref );
+						hilites.push( vm.synonymsDetail.ref.split(':')[0] + ':' ); //the sura ref, ex: '3:'
+						$('.synonymsDetailContent').unmark({ "done": function(){//now turn on highlighting of sura
+																$('.synonymsDetailContent').mark( hilites );
+													 }
+						});
+					}, 100);
+				});
 			return {
 				name: name,
 				topicId: topicId,
 				topicUrl: topicUrl,
 				words: lookup,
 				ref: key,
+				content: content,
 			};
 		}
 		
-		vm.keyword = '1:1'; //'LEM:{som';
-		//vm.go();
+		//ref: https://jsfiddle.net/228d4snb/
+		vm.feedbackOnSubmit = function(){
+			vm.feedbackEmail = vm.feedbackEmail ? vm.feedbackEmail : '4gutsy+formautofillin@gmail.com';
+
+			$.ajax({
+			        url: "//formspree.io/4gutsy+formspree@gmail.com", 
+			        method: "POST",
+			        data: {email: vm.feedbackEmail, message: vm.feedbackMessage},
+			        dataType: "json"
+			});
+			alert('Thanks for the email, we\'ll be in touch promptly.');
+			return false;
+		}
 		if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
 	}
   </script>

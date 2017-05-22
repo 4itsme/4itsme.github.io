@@ -25,8 +25,8 @@ var qMain = (function(){
 			function(key, data){ qSearch.setData(key, data); },
 			function(key, data){ qSearch.setData(key, data); },
 			function(key, data){ qSearch.setData(key, data); },
-			function(key, data){ qSynonyms.setData(data); },
-			function(key, data){ qAsbab.setData(data); },
+			function(key, data){ qSynonyms.setData(data); /* Intentionally not caching */ },
+			function(key, data){ qSearch.setData(key, data); qAsbab.setData(data); },
 		],
 		
 		scripts = [
@@ -35,7 +35,7 @@ var qMain = (function(){
 			//,'qS.js'
 			//,'qV.0.2.js'
 			,'qRoot.js'
-			,'qSearch.0.9.js'
+			,'qSearch.1.0.js'
 			,'qRootLemDict.js'
 			,'qRootMeanings.js'
 			,'qCorpus.0.4.js'
@@ -81,6 +81,9 @@ var qMain = (function(){
 		init = function(serverPath, dataPath){
 			_serverPath = serverPath;
 			if(dataPath){ _dataPath = dataPath; }
+			if(typeof(qSearch) !== 'undefined' && qSearch){
+				qSearch.init(_serverPath, _dataPath);
+			}
 		},
 		
 		
@@ -88,6 +91,7 @@ var qMain = (function(){
 			$getMultiScripts(scripts, _serverPath + _dataPath).done(function() {
 				// all scripts loaded
 				console.log( 'all scripts downloaded' );
+				qSearch.init(_serverPath, _dataPath);
 				///vm.go();
 				
 				/*if(!_serverPath || _serverPath === ''){
@@ -105,6 +109,7 @@ var qMain = (function(){
 					var dataScripts = [];
 					_.each(_.range(0, files.length), function(i){
 						if(qSearch.getData( filesKey[i] ) && qSearch.getData( filesKey[i] ).length){
+							if('ASBAB' === filesKey[i]){ qAsbab.setData( qSearch.getData( filesKey[i] ) ); }
 							return; //if already cached in localstorage, dont redownload
 						}
 						dataScripts.push( files[i].replace(/\.txt/g, '.js') );

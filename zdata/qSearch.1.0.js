@@ -5,6 +5,7 @@ var qSearch = (function(){
 		BARE: {raw: null, final: null, arr: []},
 		TRANS: {raw: null, final: null, arr: []},
 		TRANSLIT: {raw: null, final: null, arr: []},
+		CORPUS: {raw: null, final: null, arr: []},
 	}
 	var isInited = false;
 	
@@ -25,6 +26,9 @@ var qSearch = (function(){
 				case 'TRANSLIT':
 					result = !repo.TRANSLIT.final ? null : repo.TRANSLIT.arr[ +verseNo - 1];
 					break;
+				case 'CORPUS':
+					result = !repo.CORPUS.final ? null : repo.CORPUS.arr[ +verseNo - 1 + 1];
+					break;
 				default:
 					break;
 				
@@ -35,6 +39,7 @@ var qSearch = (function(){
 				BARE: lookup(verseNo, 'BARE'),
 				TRANS: lookup(verseNo, 'TRANS'),
 				TRANSLIT: lookup(verseNo, 'TRANSLIT'),
+				CORPUS: lookup(verseNo, 'CORPUS'),
 			}
 		}
 		return result;
@@ -71,6 +76,9 @@ var qSearch = (function(){
 				gq.MANZIL56.slice(1),
 				gq.MANZIL7.slice(1)
 			)
+
+			repo.CORPUS.final = 1;
+			repo.CORPUS.arr = window.gq.Q;
 			
 			/*_.each([gq.MANZIL1, gq.MANZIL234, gq.MANZIL56, gq.MANZIL7, gq.Q], function(m){
 				console.log( [ m[0], m.length], +m[0] + m.length - 1 );
