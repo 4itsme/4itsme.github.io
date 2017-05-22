@@ -64,6 +64,7 @@
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
   <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab; tab = 'asbab';" title="show Asbab (Sababun Nuzul)" />Asbab
   <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms; tab = 'synonyms';" title="show transliteration" />Synonyms
+  <input type=checkbox v-model="showCorpus" click="showCorpus = !showCorpus" title="show transliteration" />Grammar
   <span v-if='isLoading'>
 	<ul class="fa-ul">
 		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
@@ -138,6 +139,17 @@
 				</span>
 				<span v-if="verse.TRANSLIT" >
 					<div v-if="showTranslit" dir=ltr v-html="verse.TRANSLIT"></div>
+				</span>
+				<span v-if="verse.CORPUS" >
+					<div v-if="showCorpus" dir=rtl>
+						<!--{{ verse.CORPUS }}-->
+						<span v-for="(word, wordIndex) in qCorpus.parseEx( verse.CORPUS )">
+							<!-- {{ word }} -->
+							<span :title=" word.en +'\n'+ word.score +'\n'+ word.scoreVerb +'\n\n' + JSON.stringify(word) ">
+								{{ word.ar }}
+							</span>
+						</span>
+					</div>
 				</span>
 
 
@@ -424,6 +436,7 @@ var vm = new Vue({
 	showArabic: true,
 	showTrans: false,
 	showTranslit: false,
+	showCorpus: true,
 	showAsbab: true,
 	showAsbabPretty: true,
 	showSynonyms: true,
@@ -435,6 +448,7 @@ var vm = new Vue({
 	synonymsDetail: "",
 	_: { find:function(){} },
 	qUtil:{},
+	qCorpus:{},
 	currentPageSynonymsDetails: [],
 	tab: 'about',
 	feedbackEmail: '',
@@ -565,6 +579,7 @@ var vm = new Vue({
 						 })
 						.value() || [];
 			vm.qUtil = qUtil;
+			vm.qCorpus = qCorpus;
 		});
 		if(vm){
 			vm._ = _;

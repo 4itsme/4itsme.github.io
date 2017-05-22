@@ -35,7 +35,7 @@ var qMain = (function(){
 			//,'qS.js'
 			//,'qV.0.2.js'
 			,'qRoot.js'
-			,'qSearch.0.9.js'
+			,'qSearch.1.0.js'
 			,'qRootLemDict.js'
 			,'qRootMeanings.js'
 			,'qCorpus.0.4.js'
