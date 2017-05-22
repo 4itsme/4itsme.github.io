@@ -9,10 +9,42 @@ Critical bugs:
 
 ==================================================
 Verification: Juzz Tabaarak. 5/21/17.
-Topic ayah correction:
-* page 582. ayah 78:1. for the topic: No, nay (id: n28). Link topic n28 to ayah - instead of 78:1, to 78:4
+Topic ayah correction: from pg search562
+* ayah 68:5 for the topic: Lunatic , insanity (id: d36); 68:6
+* ayah 68:15 for the topic: Nose (id: n8) 68:16
+* ayah 68:17 for the topic: except (id: s24) 68:18
+* --- continue from pg 566
+* ayah 69:21 for the topic: Bunch(of grapes etc), ear (of corn) (id: kh19). make it 69:23
+* ayah 69:28 for the topic: To hang, dangle (id: l5). 69:28 only; remove 69:29
+* ayah 69:30 for the topic: Tent, pavilion (id: kh21). 69:31 only.
+* -- continuing from pg 568
+* ayah 69:28 for the topic: To hang, dangle (id: l5). only 69:28, remove 69:29.
+* ayah 69:44 for the topic: To lie, fabricate (id: j27). remove 69:45, 46.
+* ayah 70:10 for the topic: To show/reveal (id: d32). keep 70:11. remove 70:10
+* ayah 70:11 for the topic: Family,tribe (id: q5)70. keep only 70:13 remove prev 2. or remove 70:11.
+* ayah 70:15 for the topic: Skin (id: k32). make it 70:16.
+* ayah 70:36 for the topic: Group (id: j11). 70:37 only; remove other.
+* ayah 72:1 for the topic: plentiful (id: w1). * shud be pointed to 72:16 instead
+* ayah 72:26 for the topic: To like, (id: p17). 72:27
+* ----- continue pg 574
+* ayah 73:12 for the topic: To swallow (id: n26); 73:13
+* ayah 74:4 for the topic: Filth, impurity (id: gg16) 74:5
+* ayah 74:14 for the topic: To keep hope (id: TA6) 74:15
+* ayah 74:21 for the topic: To stroll, to wander (id: p34). 74:23 only; remove other 2.
+* ayah 74:21 for the topic: Scowl, frown (id: t34) 74:22 only
+* ayah 74:33 for the topic: Light, to illuminate (id: r15) 74:34
+* ayah 75:22 for the topic: Beautiful (id: kh15); 75:22 only - remove 75:23
+* ayah 75:31 for the topic: destruction (id: h6). actually 75:34 only.
+* 
 
+Arabic text ltr instead of rtl:
+* ayah 72:1 for the topic: Some, few (id: ch17)
+* ayah 75:16 for the topic: Cause to walk or move (id: ch13)
 
+Translation overlapping the Quran text/nopt staying within its pane:
+* ??? didnt note ???
+*  ayah 75:25 for the topic: To break (id: t24)
+* 
 ==================================================
 
 
