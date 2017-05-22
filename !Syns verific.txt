@@ -42,9 +42,9 @@ Arabic text ltr instead of rtl:
 * ayah 75:16 for the topic: Cause to walk or move (id: ch13)
 
 Translation overlapping the Quran text/nopt staying within its pane:
-* ??? didnt note ???
-*  ayah 75:25 for the topic: To break (id: t24)
-* 
+* ayah 67:3 for the topic: Layered (id: t26)
+* ayah 75:25 for the topic: To break (id: t24)
+* ayah 67:4 for the topic: To get tired (id: t27)
 ==================================================
 
 
