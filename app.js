@@ -58,10 +58,11 @@ require.config({
 					,qSarf
 		){
 	var vm;
+	
+	initializeVueComponents(Vue);
 
 	vm = initializeVM();
 	
-	initializeVueComponents(Vue);
 
 	/* BEGIN: THIS BLOCK IS FOR DEBUGGING; remove once all stable */
 	window.vm = vm;
