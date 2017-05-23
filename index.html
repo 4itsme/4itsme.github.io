@@ -347,6 +347,11 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
+	  	  <div v-if="verbResults">
+	  	  	<HR>Verbs lookup results: <BR>
+	  	  	{{ verbResults }}
+	  	  </div>
+
 		  <div v-if="rootLemResults && rootLemResults.length > 0">
 			  <HR>Dictionary lookup results: <BR>
 			  <!-- {{ rootLemResults }} -->
