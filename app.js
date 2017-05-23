@@ -24,6 +24,7 @@ require.config({
 	"qSynonyms": 'lib/modules/qSynonyms',
 	"qUtil": 'lib/modules/qUtil',
 	"qSarf": 'lib/modules/qSarf',
+	"qAntonyms": 'lib/modules/qAntonyms',
 
 	//data files paths
 	"asbabDATA": 'data/asbabDATA',
@@ -44,7 +45,7 @@ require.config({
 					
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
 					, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
-					, 'qSarf'
+					, 'qSarf', 'qAntonyms'
 		];
 
 	require(_dependencies, function( 
@@ -55,7 +56,7 @@ require.config({
 
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
 					,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
-					,qSarf
+					,qSarf ,qAntonyms
 		){
 	var vm;
 
