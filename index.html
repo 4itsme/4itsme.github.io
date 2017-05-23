@@ -408,7 +408,7 @@
 			</form>
 	  	  	<v-grid
 			    :data="verbResults"
-			    :columns=" _.keys(_.first( verbResults ) )"
+			    :columns=" _.without( _.keys(_.first( verbResults ) ), 'sarf' )"
 			    :filter-key="verbSearchQuery">
 			  </v-grid>
 	  	  	<!-- {{ verbResults }} -->
