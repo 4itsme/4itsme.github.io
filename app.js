@@ -23,6 +23,8 @@ require.config({
 	"qSearch": 'lib/modules/qSearch.1.0',
 	"qSynonyms": 'lib/modules/qSynonyms',
 	"qUtil": 'lib/modules/qUtil',
+	"qSarf": 'lib/modules/qSarf',
+	"qAntonyms": 'lib/modules/qAntonyms',
 
 	//data files paths
 	"asbabDATA": 'data/asbabDATA',
@@ -42,7 +44,8 @@ require.config({
 					,'qAsbab' ,'qSynonyms'
 					
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch', 
+					, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
+					, 'qSarf', 'qAntonyms'
 		];
 
 	require(_dependencies, function( 
@@ -52,12 +55,16 @@ require.config({
 					,qAsbab ,qSynonyms
 
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					,qRoot ,qRootLemDict ,qRootMeanings ,qSearch, 
+					,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
+					,qSarf ,qAntonyms
 		){
 	var vm;
 
+	initializeVueComponents(Vue);
+
 	vm = initializeVM();
 	
+
 	/* BEGIN: THIS BLOCK IS FOR DEBUGGING; remove once all stable */
 	window.vm = vm;
 	window.vmArgs = arguments;
@@ -262,6 +269,11 @@ require.config({
 					});
 					vm.rootLemResults = o;	
 				  }
+				  else if(keyword.indexOf('VERB:') != -1 ){
+				  	vm.tab = 'misc';
+				  	var o = qSarf.lookup( keyword.replace('VERB:', '') );
+				  	vm.verbResults = o;
+				  }
 				  else{
 				  	vm.tab = 'search'; vm.searchResults = {searching: true};
 					var startTime = new moment(), endTime, message = '';
@@ -384,6 +396,8 @@ require.config({
 			searchResults: {},
 			rootLemResults: {},
 			lemResults: {},
+			verbResults: {},
+			verbSearchQuery: '',
 			
 			isLoading: true,
 			message: '',
@@ -499,5 +513,63 @@ require.config({
 		  }
 			 });
 		return vm;
+	}
+
+
+	function initializeVueComponents(Vue){
+
+		// register the grid component
+		Vue.component('v-grid', {
+		  template: '#grid-template',
+		  props: {
+		    data: Array,
+		    columns: Array,
+		    filterKey: String
+		  },
+		  data: function () {
+		    var sortOrders = {}
+		    this.columns.forEach(function (key) {
+		      sortOrders[key] = 1
+		    })
+		    return {
+		      sortKey: '',
+		      sortOrders: sortOrders
+		    }
+		  },
+		  computed: {
+		    filteredData: function () {
+		      var sortKey = this.sortKey
+		      var filterKey = this.filterKey && this.filterKey.toLowerCase()
+		      var order = this.sortOrders[sortKey] || 1
+		      var data = this.data
+		      if (filterKey) {
+		        data = data.filter(function (row) {
+		          return Object.keys(row).some(function (key) {
+		            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+		          })
+		        })
+		      }
+		      if (sortKey) {
+		        data = data.slice().sort(function (a, b) {
+		          a = a[sortKey]
+		          b = b[sortKey]
+		          return (a === b ? 0 : a > b ? 1 : -1) * order
+		        })
+		      }
+		      return data
+		    }
+		  },
+		  filters: {
+		    capitalize: function (str) {
+		      return str.charAt(0).toUpperCase() + str.slice(1)
+		    }
+		  },
+		  methods: {
+		    sortBy: function (key) {
+		      this.sortKey = key
+		      this.sortOrders[key] = this.sortOrders[key] * -1
+		    }
+		  }
+		})
 	}
 });
