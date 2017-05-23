@@ -351,7 +351,8 @@
 	  	  	<HR>Verbs lookup results: <BR>
 	  	  	<v-grid
 			    :data="verbResults"
-			    :columns=" _.without( _.keys(_.first( verbResults ) ), 'no', 'root', 'verbs_type', 'verbs_class', 'sura', 'verse', 'ur' ) "
+			    :columns=" _.keys(_.first( verbResults ) )"
+			    x-columns=" _.without( _.keys(_.first( verbResults ) ), 'no', 'root', 'verbs_type', 'verbs_class', 'sura', 'verse', 'ur' ) "
 			    x-columns="_.intersectionWith( _.keys(_.first( verbResults ) ), ['perfect', 'rootAr', 'count', 'en', 'type', 'class',		'perfect', 'imperfect',	'imperative', 'acct-pcpl', 'pass-pcpl', 'vn' ] )"
 			    x="['Perfect', 'RootAr', 'Count', 'En', 'Type', 'Class',		'Perfect', 'Imperfect',	'Imperative', 'Acct-pcpl', 'Pass-pcpl', 'Vn' ]" 
 			    :filter-key="''">
