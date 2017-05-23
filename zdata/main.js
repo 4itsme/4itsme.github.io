@@ -1,23 +1,14 @@
-define([  'jquery'
-		, 'Q', 'qAsbab', 'qCorpus', 'qRoot'
-		, 'qRootLemDict', 'qRootMeanings', 'qSearch', 'qSynonyms', 'qUtil'
-//		, 'asbabDATA', 'synonymsDATA'
-	], function( $
-		, Q, qAsbab, qCorpus, qRoot
-		, qRootLemDict, qRootMeanings, qSearch, qSynonyms, qUtil
-//		, asbabDATA, synonymsDATA
-		){
-//var qMain = (function(){
+var qMain = (function(){
 	var publicApi = {},
 		_serverPath = '', //like http://localhost:8080
-		_dataPath   = '/data/', //like zdata	
+		_dataPath   = '/zdata/', //like zdata	
 
 		files = [
 			 'qBuckFull.txt'
 			,'TANZIL.en.sahih.txt'
 			,'TANZIL.en.transliteration.txt'
-			//,'synonymsDATA.js'
-			//,'asbabDATA.js'
+			,'synonymsDATA.js'
+			,'asbabDATA.js'
 			//,'qBuck.txt'
 		],
 		
@@ -38,7 +29,7 @@ define([  'jquery'
 			function(key, data){ qSearch.setData(key, data); qAsbab.setData(data); },
 		],
 		
-		scripts = [/*
+		scripts = [
 			 'qUtil.js'
 			,'Q.js'
 			//,'qS.js'
@@ -50,7 +41,7 @@ define([  'jquery'
 			,'qCorpus.0.4.js'
 			//,'qAnalytics.js'
 			,'qAsbab.js'
-			,'qSynonyms.js'*/
+			,'qSynonyms.js'
 		],
 
 
@@ -164,9 +155,7 @@ define([  'jquery'
 		go: go
 	};
 	return publicApi;
-//})();
-});
-
+})();
 
 // main usage:
 //qMain.go();

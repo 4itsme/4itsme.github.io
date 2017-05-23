@@ -1,5 +1,4 @@
-﻿define([], function(){
-//var Q = (function(){
+﻿var Q = (function(){
 	var _q;
 	var Quran = {
 			
@@ -545,6 +544,5 @@
 	}
 	
 	return Quran;
-//})();
+})();
 
-});

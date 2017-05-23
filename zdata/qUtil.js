@@ -1,5 +1,4 @@
-define([], function(){
-//var qUtil = (function(){
+var qUtil = (function(){
 	var publicApi,
 		_bMAPPER_DEBUG = true,
 		NULL = null,
@@ -178,7 +177,6 @@ define([], function(){
     };
 
 	return publicApi;
-//})();
+})();
 
 
-});

@@ -1,5 +1,4 @@
-define([], function(){
-//var qRoot = (function(){
+var qRoot = (function(){
 	var publicApi = {};
 
 	function query( s ){
@@ -29,6 +28,5 @@ define([], function(){
 		test: test
     };
 	return publicApi;
-//})();
+})();
 
-});

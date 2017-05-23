@@ -1,5 +1,4 @@
-define([], function(){
-//var qCorpus = (function(){
+var qCorpus = (function(){
 	var publicApi = {},
 	
 	_c = null,
@@ -158,5 +157,4 @@ define([], function(){
 	};
 	
 	return publicApi;
-//})();
-});
+})();
