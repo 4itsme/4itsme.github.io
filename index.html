@@ -307,7 +307,7 @@
 		<div v-if="showAsbabDetail">
 			<BR/>
 			Sabab Nuzul details for selected Ayah: 
-			<button class="btn btn-default pull-right" @click='showAsbabPretty = !showAsbabPretty'>Show {{ showAsbabPretty ? 'raw' : 'formatted' }}</button><BR><HR>
+			<button class="btn btn-default btn-xs pull-right" @click='showAsbabPretty = !showAsbabPretty'>Show {{ showAsbabPretty ? 'raw' : 'formatted' }}</button><BR><HR>
 			<span v-if='showAsbabPretty'>
 				<span v-html='asbabDetail.pretty'></span>
 			</span>
@@ -320,7 +320,7 @@
 	  
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'synonyms' }" id="synonyms">
 	  	<div>
-	  		Near Synonyms in current page:
+	  		Near-Synonyms in current page:
 			<span v-for="(first, index1) in currentPageSynonyms">
 				<span v-for="(subItem, subKey) in first">
 					<BR>{{ subKey }}: 
@@ -345,28 +345,44 @@
 	  	</div>
 		<div class=synonymsDetail v-if="showSynonymsDetail && synonymsDetail">
 			<BR/> 	<!-- vm.synonymsDetail = {name: name, topicId: topicId, topicUrl: topicUrl, 	words: lookup, ref: key }; -->	
-			Near Synonyms found in ayah {{ synonymsDetail.ref }} for the topic: {{ synonymsDetail.name}} (id: {{ synonymsDetail.topicId}})<BR>
-			<A :HREF="'./' + synonymsDetail.topicUrl" target=_ >Click to read content</A> in a separate tab.<BR>
+			<div class=clearfix>
+				Ayah <span class="label label-default">{{ synonymsDetail.ref }}</span> -- Topic: <span class="label label-info">{{ synonymsDetail.name}}</span> 
+				<span class="text-muted">(id: {{ synonymsDetail.topicId}})</span>
+				<span xclass="pull-right">
+					<A :HREF="'./' + synonymsDetail.topicUrl" target=_ title='Open in new window'>
+						<i class="fa fa-external-link" aria-hidden="true"></i>
+					</A>
+				</span>
+				<button class="btn btn-default btn-xs pull-right" @click='showSynonymsPretty = !showSynonymsPretty'>Show {{ showSynonymsPretty ? 'raw' : 'formatted' }}</button>
+			</div>
+			<span v-if='showSynonymsPretty'>
+				<HR><span class='synonymsDetailContent' v-html='synonymsDetail.content'></span><HR>
+			</span>
+			<span v-else><!-- for raw -->
+				<!-- 16:9 aspect ratio -->
+				<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+				  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
+				<!-- </div>					 -->
+				<!-- 4:3 aspect ratio -->
+				<div class="embed-responsive embed-responsive-4by3">
+				  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
+				</div>
+			</span>
+			
+			<BR>
+			
 			
 			<span v-for="word in synonymsDetail.words">
 				<A HREF="#" @click="showSynonymsFor(word, item, verse.surah, verse.ayah)">
 				<span class="label label-success" :title="word.word">
 					{{word.wordEn}}
 				</span>
-			</A>&nbsp;
+			&nbsp;
 			</span>
 			
-			<HR>
-			<span class='synonymsDetailContent' v-html='synonymsDetail.content'></span>
-			<HR>
-			<!-- 16:9 aspect ratio -->
-			<!-- <div class="embed-responsive embed-responsive-16by9"> -->
-			  <!-- <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe> -->
-			<!-- </div>					 -->
-			<!-- 4:3 aspect ratio -->
-			<div class="embed-responsive embed-responsive-4by3">
-			  <iframe class="embed-responsive-item" :src="'./' + synonymsDetail.topicUrl"></iframe>
-			</div>
+			
+
+			
 			<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
 			<BR/>
 		</div>

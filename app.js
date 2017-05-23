@@ -409,6 +409,7 @@ require.config({
 			showAsbab: true,
 			showAsbabPretty: true,
 			showSynonyms: true,
+			showSynonymsPretty: true,
 			currentPageAsbab: [],
 			showAsbabDetail: false,
 			asbabDetail: "",
