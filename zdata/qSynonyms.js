@@ -1,5 +1,4 @@
-define(['Q'], function(Q){
-//var qSynonyms = (function(){
+var qSynonyms = (function(){
 	var publicApi = {},
 		v = 0.1;
 
@@ -259,7 +258,6 @@ define(['Q'], function(Q){
 		synonyms: function(){ return repo.synonyms; },
 	};
 	return publicApi;
-//})();
-});
+})();
 
 ///qSynonyms.init();

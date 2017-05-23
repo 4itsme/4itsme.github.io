@@ -1,5 +1,4 @@
-define(['Q'], function(Q){
-//var qAsbab = (function(){
+var qAsbab = (function(){
 	var publicApi = {};
 
 	var url = "./zdata/asbabNuzulDataRaw.txt",
@@ -158,6 +157,5 @@ define(['Q'], function(Q){
 		asbabDataKeys: asbabDataKeys,
 	}
 	return publicApi;
-//})();
+})();
 
-});

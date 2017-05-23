@@ -1,5 +1,4 @@
-define(['underscore', 'qUtil', 'Q'], function(_, qUtil, Q){
-//var qSearch = (function(){
+var qSearch = (function(){
 	var publicApi = {};	
 	var repo = {
 		BUCK: {raw: null, final: null, arr: []},
@@ -66,7 +65,7 @@ define(['underscore', 'qUtil', 'Q'], function(_, qUtil, Q){
 	function initCorpus(serverPath, dataPath){
 		window.gq = window.gq || {cookdata: function(){} };
 		var _serverPath = serverPath ? serverPath : 'http://localhost:8080/',
-			_dataPath = dataPath ? dataPath : 'data/',
+			_dataPath = dataPath ? dataPath : 'zdata/',
 			scripts = ['manzil1,7.js', 'manzil5,6.js', 'manzil2,3,4.js'];
 		$getMultiScripts(scripts, _serverPath + _dataPath).done(function() {
 			// all scripts loaded
@@ -255,14 +254,14 @@ define(['underscore', 'qUtil', 'Q'], function(_, qUtil, Q){
 	var oBuck, oTrans, dataType, dontcache, oTransLit, NULL;
 	
 	var initOld = function(){
-		var key="BUCK", url = 'data/qBuck.txt';
+		var key="BUCK", url = 'zdata/qBuck.txt';
 		var success = function(data, textStatus, jqXHR){	qBuck = data; data = null; }
 		var error = function(jqXHR, textStatus, errorThrown){ console.log('Search: ERROR: unable to load ' + url); }
 		if(oBuck == null)
 			oBuck = getData(key, url, success, error);
 
 
-		var key="TRANS", url = 'data/TANZIL.en.sahih.txt', url2 = 'data/TANZIL.en.transliteration.txt', url3 = 'data/TANZIL.ur.maududi.txt';
+		var key="TRANS", url = 'zdata/TANZIL.en.sahih.txt', url2 = 'data/TANZIL.en.transliteration.txt', url3 = 'data/TANZIL.ur.maududi.txt';
 		var success= function(data, textStatus, jqXHR){	qTrans = data; data = null; qTransArr = qTrans.split(/\r?\n/); },
 			error= function(jqXHR, textStatus, errorThrown){ console.log('Search: ERROR: unable to load ' + url); }
 		if(oTrans == null)
@@ -270,7 +269,7 @@ define(['underscore', 'qUtil', 'Q'], function(_, qUtil, Q){
 		///onTranslitInit();
 
 
-		var key = "TRANSLIT", url = 'data/TANZIL.en.transliteration.txt';
+		var key = "TRANSLIT", url = 'zdata/TANZIL.en.transliteration.txt';
 		var success= function(data, textStatus, jqXHR){	
 				qTransLit = $('<div />').html( data ).text(); //strip out html tags from the transliteration
 				qTransLitArr = data.split(/\r?\n/); data=null; delete data; }, //temporarily we overwrite the trans data
@@ -353,7 +352,6 @@ define(['underscore', 'qUtil', 'Q'], function(_, qUtil, Q){
 	};
 	
 	return publicApi;
-//})();
-});
+})();
 
 //qSearch.search();

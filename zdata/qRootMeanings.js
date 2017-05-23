@@ -1,5 +1,4 @@
-define([], function(){
-//var qRootMeanings = (function(){
+var qRootMeanings = (function(){
 	var publicApi = {};
 	
 	var _data = 
@@ -14,7 +13,7 @@ define([], function(){
 	
 	function test(){
 		var root = 'Tmn';
-		return lookup( root );	
+		return qRootMeanings.lookup( root );	
 	}
 	
 	
@@ -25,6 +24,5 @@ define([], function(){
 	};
 	
 	return publicApi;
-//})();
+})();
 
-});
