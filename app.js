@@ -82,6 +82,7 @@ require.config({
 							.value() || [];
 				vm.qUtil = qUtil;
 				vm.qCorpus = qCorpus;
+				vm.goPage(1);
 			});
 			if(vm){
 				vm._ = _;
