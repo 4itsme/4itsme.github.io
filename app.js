@@ -58,7 +58,7 @@ require.config({
 					,qSarf
 		){
 	var vm;
-	
+
 	initializeVueComponents(Vue);
 
 	vm = initializeVM();
@@ -396,6 +396,7 @@ require.config({
 			rootLemResults: {},
 			lemResults: {},
 			verbResults: {},
+			verbSearchQuery: '',
 			
 			isLoading: true,
 			message: '',

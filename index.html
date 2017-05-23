@@ -14,6 +14,60 @@
 	  mark, .mark{
 	       background: #ff0!important;
 	   }
+
+	   table {
+		  border: 2px solid #42b983;
+		  border-radius: 3px;
+		  background-color: #fff;
+		}
+
+		th {
+		  background-color: #42b983;
+		  color: rgba(255,255,255,0.66);
+		  cursor: pointer;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+
+		td {
+		  background-color: #f9f9f9;
+		}
+
+		th, td {
+		  min-width: 120px;
+		  padding: 10px 20px;
+		}
+
+		th.active {
+		  color: #fff;
+		}
+
+		th.active .arrow {
+		  opacity: 1;
+		}
+
+		.arrow {
+		  display: inline-block;
+		  vertical-align: middle;
+		  width: 0;
+		  height: 0;
+		  margin-left: 5px;
+		  opacity: 0.66;
+		}
+
+		.arrow.asc {
+		  border-left: 4px solid transparent;
+		  border-right: 4px solid transparent;
+		  border-bottom: 4px solid #fff;
+		}
+
+		.arrow.dsc {
+		  border-left: 4px solid transparent;
+		  border-right: 4px solid transparent;
+		  border-top: 4px solid #fff;
+		}
   </style>
 </head>
 
@@ -349,13 +403,13 @@
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
 	  	  <div v-if="verbResults">
 	  	  	<HR>Verbs lookup results: <BR>
+	  	  	<form id="searchVerb">
+			    Search verb<input name="query" v-model="verbSearchQuery">
+			</form>
 	  	  	<v-grid
 			    :data="verbResults"
 			    :columns=" _.keys(_.first( verbResults ) )"
-			    x-columns=" _.without( _.keys(_.first( verbResults ) ), 'no', 'root', 'verbs_type', 'verbs_class', 'sura', 'verse', 'ur' ) "
-			    x-columns="_.intersectionWith( _.keys(_.first( verbResults ) ), ['perfect', 'rootAr', 'count', 'en', 'type', 'class',		'perfect', 'imperfect',	'imperative', 'acct-pcpl', 'pass-pcpl', 'vn' ] )"
-			    x="['Perfect', 'RootAr', 'Count', 'En', 'Type', 'Class',		'Perfect', 'Imperfect',	'Imperative', 'Acct-pcpl', 'Pass-pcpl', 'Vn' ]" 
-			    :filter-key="''">
+			    :filter-key="verbSearchQuery">
 			  </v-grid>
 	  	  	<!-- {{ verbResults }} -->
 	  	  </div>
