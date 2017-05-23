@@ -37,6 +37,7 @@ require.config({
 
 	var _dependencies = [
 					 'vue', 'qMain'
+					,'jquery', 'jqueryMark', 'moment'
 					,'Q' ,'qUtil' ,'qCorpus'
 					,'qAsbab' ,'qSynonyms'
 					
@@ -46,6 +47,7 @@ require.config({
 
 	require(_dependencies, function( 
 					Vue, qMain
+					,$, jqueryMark, moment
 					,Q ,qUtil ,qCorpus 
 					,qAsbab ,qSynonyms
 
