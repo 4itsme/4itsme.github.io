@@ -1,9 +1,18 @@
 require.config({
   paths: {
     "jquery": 'lib/jquery.min', //"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
+    							//'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min',
     "underscore": 'lib/lodash.min', //"lib/underscore",
-    "vue": 'lib/vue',
+    							//https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min
+    "bootstrap": "libcss/bootstrap-3.3.7-dist/js/bootstrap.min", 
+    							//"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    "vue": 'lib/vue',			//https://unpkg.com/vue/dist/vue
 
+    "moment": 'lib/moment.min',
+
+    "jqueryMark": 'lib/jquery.mark.min',
+    							//http://www.jsdelivr.com/projects/mark
+    							//https://cdnjs.com/libraries/mark
     "qMain": 'lib/modules/qMain',
     "Q": 'lib/modules/Q', 
     "qAsbab": 'lib/modules/qAsbab', 
