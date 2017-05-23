@@ -386,7 +386,7 @@
 			<!-- <PRE>{{synonymsDetail.words}}</PRE> -->
 			<BR/>
 		</div>
-		<div v-else>Synonyms info shown here if available</div>
+		<div v-if='!showSynonymsDetail'>Synonyms info shown here if available</div>
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
@@ -417,6 +417,10 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'misc' }" id="misc">
+	  	  <div v-if="wordCorpusResults">
+	  	  	{{ wordCorpusResults }}
+	  	  </div>
+
 	  	  <div v-if="verbResults">
 	  	  	<HR>Verbs lookup results: <BR>
 	  	  	<form id="searchVerb">

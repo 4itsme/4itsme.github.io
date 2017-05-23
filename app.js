@@ -398,6 +398,7 @@ require.config({
 			lemResults: {},
 			verbResults: {},
 			verbSearchQuery: '',
+			wordCorpusResults: {},
 			
 			isLoading: true,
 			message: '',
