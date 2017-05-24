@@ -213,6 +213,13 @@ require.config({
 					//also highlight that ayah on the page
 					// and bring that ayah into view (scrollIntoview)
 					// and finally hilite the search keyword on that Quran page
+					
+					//clear out old keywords and set new ones.
+					// $('.searchResults').unmark({ "done": function(){
+					// 										$('.searchResults').mark( hilites );
+					// 							 }
+					// });
+
 
 				}
 				
