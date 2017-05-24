@@ -209,13 +209,26 @@ require.config({
 						},
 						pageNo = Q.ayah.page(loc.sura, loc.ayah);
 					vm.goPage( pageNo );
-
-					//TODO: also highlight that ayah on the page
-					// and bring that ayah into view (scrollIntoview)
-					// and finally hilite the search keyword on that Quran page
 					
+
+					//first un-highlight all ayahs on page
+					//vm.ayahsListFromPage.forEach(function(v){
+					//	console.log(v.isHighlighted = false);
+					//});
+
+					//also highlight that ayah on the page
 					var verse = _.find( vm.ayahsListFromPage, {surah: loc.sura, ayah: loc.ayah});
 					verse && (verse.isHighlighted = true);
+
+
+					setTimeout(function(){
+						// and bring that ayah into view (scrollIntoview)
+						$('.aya.highlight').length > 0 && typeof( $('.aya.highlight')[0].scrollIntoView ) != 'undefined'
+							&& $('.aya.highlight')[0].scrollIntoView();
+
+						// and finally hilite the search keyword on that Quran page
+					}, 0);
+
 
 					//clear out old keywords and set new ones.
 					// $('.searchResults').unmark({ "done": function(){
