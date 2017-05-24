@@ -51,6 +51,7 @@ require.config({
 					 'vue', 'qMain'
 					,'underscore' ,'jquery', 'jqueryMark', 'moment'
 					,'Q' ,'qUtil' 
+					,'qSearch'
 					//,'qCorpus'
 					//,'qAsbab' ,'qSynonyms'
 					
@@ -63,6 +64,7 @@ require.config({
 					Vue, qMain
 					,_ ,$, jqueryMark, moment
 					,Q ,qUtil 
+					,qSearch
 					//,qCorpus 
 					//,qAsbab ,qSynonyms
 
