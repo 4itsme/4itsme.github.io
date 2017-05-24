@@ -213,7 +213,7 @@ require.config({
 					//also highlight that ayah on the page
 					// and bring that ayah into view (scrollIntoview)
 					// and finally hilite the search keyword on that Quran page
-					
+
 				}
 				
 				vm.goRootToLem = function(match, key, index){
@@ -315,9 +315,9 @@ require.config({
 						setTimeout(function(){
 							var hilites = [];
 							hilites.push( vm.searchResults.keyword );
-							hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
-							hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) );
-							hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) );
+							//hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
+							hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) ); //TODO: conditionally do this
+							hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) ); //TODO: conditionally do this
 
 							//clear out old keywords and set new ones.
 							$('.searchResults').unmark({ "done": function(){
