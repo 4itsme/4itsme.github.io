@@ -39,30 +39,45 @@ require.config({
 
 	var _dependencies = [
 					 'vue', 'qMain'
-					,'jquery', 'jqueryMark', 'moment'
-					,'Q' ,'qUtil' ,'qCorpus'
-					,'qAsbab' ,'qSynonyms'
+					,'underscore' ,'jquery', 'jqueryMark', 'moment'
+					,'Q' ,'qUtil' 
+					//,'qCorpus'
+					//,'qAsbab' ,'qSynonyms'
 					
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
-					, 'qSarf', 'qAntonyms'
+					//, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
+					//, 'qSarf', 'qAntonyms'
 		];
 
 	require(_dependencies, function( 
 					Vue, qMain
-					,$, jqueryMark, moment
-					,Q ,qUtil ,qCorpus 
-					,qAsbab ,qSynonyms
+					,_ ,$, jqueryMark, moment
+					,Q ,qUtil 
+					//,qCorpus 
+					//,qAsbab ,qSynonyms
 
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
-					,qSarf ,qAntonyms
+					//,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
+					//,qSarf ,qAntonyms
 		){
 	var vm;
 
 	initializeVueComponents(Vue);
 
 	vm = initializeVM();
+
+	vm._ = _;
+	vm.qUtil = qUtil;
+	vm.suras = _.chain( _.range(1, 115) )
+				.map( function(s){
+					var det = Q.surah.detail( s );
+					return _.extend( det, { 
+						name: s + '. ' + det.english_name +'  '+ det.arabic_name,
+						value: s
+					} );
+				 })
+				.value() || [];
+	//vm.qCorpus = qCorpus; //dont load until needed
 	
 
 	/* BEGIN: THIS BLOCK IS FOR DEBUGGING; remove once all stable */
@@ -89,22 +104,9 @@ require.config({
 				vm.isLoading = false;
 				//vm && vm.go();
 				
-				vm.suras = _.chain( _.range(1, 115) )
-							.map( function(s){
-								var det = Q.surah.detail( s );
-								return _.extend( det, { 
-									name: s + '. ' + det.english_name +'  '+ det.arabic_name,
-									value: s
-								} );
-							 })
-							.value() || [];
-				vm.qUtil = qUtil;
-				vm.qCorpus = qCorpus;
 				vm.goPage(1);
 			});
 			if(vm){
-				vm._ = _;
-				vm.suras = [];
 				
 				onChangeSura = function(vm){
 					vm.queryData.page = Q.ayah.page(vm.queryData.sura, vm.queryData.ayah ? vm.queryData.ayah : 1);
@@ -379,7 +381,7 @@ require.config({
 				alert('Thanks for the email, we\'ll be in touch promptly.');
 				return false;
 			}
-			if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
+			//if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
 		}
 
 	}
