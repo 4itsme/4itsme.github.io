@@ -201,9 +201,19 @@ require.config({
 				}
 				
 				vm.goSearchResult = function(match){ //single string like this 5|12|sdfsfs fsdfsdfs
-					var tmp = match ? match.split('|') : ['-', '-', '-'];
-					vm.keyword = tmp[0] +':'+ tmp[1]+':'+1;
-					vm.go();
+					var tmp = match ? match.split('|') : ['-', '-', '-'],
+						loc = {
+								sura: +tmp[0],
+								ayah: +tmp[1],
+								word: +tmp[2]
+						},
+						pageNo = Q.ayah.page(loc.sura, loc.ayah);
+					vm.goPage( pageNo );
+
+					//also highlight that ayah on the page
+					// and bring that ayah into view (scrollIntoview)
+					// and finally hilite the search keyword on that Quran page
+					
 				}
 				
 				vm.goRootToLem = function(match, key, index){
