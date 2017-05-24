@@ -11,6 +11,10 @@
   <link rel="stylesheet" href="libcss/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="libcss/font-awesome-4.7.0/css/font-awesome.min.css">
   <style>
+	  [v-cloak] {
+	  	display: none;
+	  }
+
 	  mark, .mark{
 	       background: #ff0!important;
 	   }
@@ -72,6 +76,7 @@
 </head>
 
 <body>  
+<H4>Qur'aan Viewer</H4>
 <div id="app-1" class="container-fluid">
   <!--<H2>Q viewer</H2>-->
   <!-- Sura dropdown   -->
@@ -119,15 +124,20 @@
   <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab; tab = 'asbab';" title="show Asbab (Sababun Nuzul)" />Asbab
   <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms; tab = 'synonyms';" title="show transliteration" />Synonyms
   <!-- <input type=checkbox v-model="showCorpus" click="showCorpus = !showCorpus" title="show transliteration" />Grammar -->
-  <span v-if='isLoading'>
-	<ul class="fa-ul">
-		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
-	</ul>
-	<!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> -->
-	<!-- <span class="sr-only">Loading...</span> -->
-  </span>{{message}}
+  <div v-if='isLoading'>
+  	<BR><BR><BR><BR><BR>
+	<!-- <i class="fa-li fa fa-spinner fa-pulse"></i>Loading... -->
+	<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+	<span class="sr-only">Loading...</span>
+  </div>
+
+  <div v-cloak>
+  	{{message}}
+  </div>
 
   <HR>
+
+  <div v-cloak v-if='!isLoading'>
   <div class="col-md-7">
 	<div v-if="ayahsListFromPage">
 		<button v-show="queryData.page !== 1" @click="queryData.page = queryData.page <= 1 ? 1 : queryData.page - 1; onChange('page');">Previous page</button>
@@ -509,7 +519,7 @@
 
   
 </div>
-
+</div>
 
 
   <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script> -->
