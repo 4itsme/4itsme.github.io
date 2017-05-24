@@ -13,7 +13,7 @@ require.config({
     "jqueryMark": 'lib/jquery.mark.min',
     							//"http://www.jsdelivr.com/projects/mark"
     							//"https://cdnjs.com/libraries/mark"
-
+    "vue-awesome": 'lib/vue-awesome', //see: https://github.com/Justineo/vue-awesome
 
     //module code file paths							
     "qMain": 'lib/modules/qMain',
