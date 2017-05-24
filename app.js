@@ -3,35 +3,45 @@ require.config({
     "jquery": 'lib/jquery.min', //"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
     							//'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min',
     "underscore": 'lib/lodash.min', //"lib/underscore",
-    							//https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min
+    							//"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min"
     "bootstrap": "libcss/bootstrap-3.3.7-dist/js/bootstrap.min", 
     							//"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    "vue": 'lib/vue',			//https://unpkg.com/vue/dist/vue
+    "vue": 'lib/vue',			//"https://unpkg.com/vue/dist/vue"
 
     "moment": 'lib/moment.min',
 
     "jqueryMark": 'lib/jquery.mark.min',
-    							//http://www.jsdelivr.com/projects/mark
-    							//https://cdnjs.com/libraries/mark
+    							//"http://www.jsdelivr.com/projects/mark"
+    							//"https://cdnjs.com/libraries/mark"
+
+
+    //module code file paths							
     "qMain": 'lib/modules/qMain',
     "Q": 'lib/modules/Q', 
+	"qUtil": 'lib/modules/qUtil',
+	"qSearch": 'lib/modules/qSearch.1.0',
+
     "qAsbab": 'lib/modules/qAsbab', 
+	"qSynonyms": 'lib/modules/qSynonyms',
     "qCorpus": 'lib/modules/qCorpus.0.4',
-    "qRoot": 'lib/modules/qRoot',
     "qRootLemDict": 'lib/modules/qRootLemDict',
     "qRootMeanings": 'lib/modules/qRootMeanings',
-	"qSearch": 'lib/modules/qSearch.1.0',
-	"qSynonyms": 'lib/modules/qSynonyms',
-	"qUtil": 'lib/modules/qUtil',
+
+    "qRoot": 'lib/modules/qRoot',
 	"qSarf": 'lib/modules/qSarf',
 	"qAntonyms": 'lib/modules/qAntonyms',
 
+
 	//data files paths
+	"qBuck": 'data/qBuckFull',
+	"qTrans": 'data/TANZIL.en.sahih',
+	"qTranslit": 'data/TANZIL.en.transliteration',
+
 	"asbabDATA": 'data/asbabDATA',
 	"synonymsDATA": 'data/synonymsDATA',
-	"manzil1,7": 'data/manzil1,7',
-	"manzil2,3,4": 'data/manzil2,3,4',
-	"manzil5,6": 'manzil5,6',
+	"qCorpus1": 'data/manzil1,7',
+	"qCorpus2": 'data/manzil2,3,4',
+	"qCorpus3": 'data/manzil5,6',
 
   }
 });

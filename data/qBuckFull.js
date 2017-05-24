@@ -1,4 +1,4 @@
-﻿fnJsonCallbackBUCK( "bisomi {ll~ahi {lr~aHoma`ni {lr~aHiymi\n\
+﻿define([], function(){ return /*fnJsonCallbackBUCK(*/ "bisomi {ll~ahi {lr~aHoma`ni {lr~aHiymi\n\
 {loHamodu lil~ahi rab~i {loEa`lamiyna\n\
 {lr~aHoma`ni {lr~aHiymi\n\
 ma`liki yawomi {ld~iyni\n\
@@ -6233,4 +6233,5 @@ maliki {ln~aAsi\n\
 <ila`hi {ln~aAsi\n\
 min $ar~i {lowasowaAsi {loxan~aAsi\n\
 {l~a*iY yuwasowisu fiY Suduwri {ln~aAsi\n\
-mina {lojin~api wa{ln~aAsi"	);
+mina {lojin~api wa{ln~aAsi"	/*)*/;
+});
