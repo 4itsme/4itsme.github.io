@@ -180,7 +180,7 @@ require.config({
 						verseEx.AR = qUtil.EnToAr( verseEx.BUCK );
 						verseEx.BARE = qUtil.BuckToBare( verseEx.BUCK );
 
-						verse = _.extend(verse, {isBasmallah: isBasmallah}, verseEx );
+						verse = _.extend(verse, {isBasmallah: isBasmallah, isHighlighted: false, isSelected: false}, verseEx );
 					});
 
 					//now find out if any Asbab for this page as an async call
@@ -210,10 +210,13 @@ require.config({
 						pageNo = Q.ayah.page(loc.sura, loc.ayah);
 					vm.goPage( pageNo );
 
-					//also highlight that ayah on the page
+					//TODO: also highlight that ayah on the page
 					// and bring that ayah into view (scrollIntoview)
 					// and finally hilite the search keyword on that Quran page
 					
+					var verse = _.find( vm.ayahsListFromPage, {surah: loc.sura, ayah: loc.ayah});
+					verse && (verse.isHighlighted = true);
+
 					//clear out old keywords and set new ones.
 					// $('.searchResults').unmark({ "done": function(){
 					// 										$('.searchResults').mark( hilites );
