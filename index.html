@@ -118,7 +118,7 @@
   <input type=checkbox v-model="showTranslit" click="showTranslit = !showTranslit" title="show transliteration" />Transliteration
   <input type=checkbox v-model="showAsbab" click="showAsbab = !showAsbab; tab = 'asbab';" title="show Asbab (Sababun Nuzul)" />Asbab
   <input type=checkbox v-model="showSynonyms" click="showSynonyms = !showSynonyms; tab = 'synonyms';" title="show transliteration" />Synonyms
-  <input type=checkbox v-model="showCorpus" click="showCorpus = !showCorpus" title="show transliteration" />Grammar
+  <!-- <input type=checkbox v-model="showCorpus" click="showCorpus = !showCorpus" title="show transliteration" />Grammar -->
   <span v-if='isLoading'>
 	<ul class="fa-ul">
 		<li><i class="fa-li fa fa-spinner fa-pulse"></i>Loading...</li>
@@ -202,6 +202,11 @@
 							<span :title=" word.en +'\n'+ word.score +'\n'+ word.scoreVerb +'\n\n' + JSON.stringify(word) ">
 								{{ word.ar }}
 							</span>
+							<!-- <A href=# :click="wordCorpusResults = word.en" >
+								<span :title=" word.en +'\n'+ word.score +'\n'+ word.scoreVerb +'\n\n' + JSON.stringify(word) "	>
+									{{ word.ar }}
+								</span>
+							</A> -->
 						</span>
 					</div>
 				</span>
@@ -426,11 +431,11 @@
 	  	  	<form id="searchVerb">
 			    Search verb<input name="query" v-model="verbSearchQuery">
 			</form>
-	  	  	<v-grid
+	  	  	<!-- <v-grid
 			    :data="verbResults"
 			    :columns=" _.without( _.keys(_.first( verbResults ) ), 'sarf' )"
 			    :filter-key="verbSearchQuery">
-			  </v-grid>
+			</v-grid> -->
 	  	  	<!-- {{ verbResults }} -->
 	  	  </div>
 

@@ -83,7 +83,7 @@ require.config({
 			var remote = 'https://4itsme.github.io',
 				isLocalhost = (location.origin === "http://localhost:8080" || location.href.startsWith('http://localhost:8080') ),
 				origin = isLocalhost ? location.origin : remote;
-			if(isLocalhost){ vm.showCorpus = true; }
+			//if(isLocalhost){ vm.showCorpus = true; }
 			qMain.init(origin + '/', 'data/');
 			qMain.go(function(){
 				vm.isLoading = false;
@@ -407,9 +407,9 @@ require.config({
 			showTrans: false,
 			showTranslit: false,
 			showCorpus: false,
-			showAsbab: true,
+			showAsbab: false,
 			showAsbabPretty: true,
-			showSynonyms: true,
+			showSynonyms: false,
 			showSynonymsPretty: true,
 			currentPageAsbab: [],
 			showAsbabDetail: false,
