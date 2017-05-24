@@ -438,6 +438,7 @@
 				<span class="label label-success" :title="word.word">
 					{{word.wordEn}}
 				</span>
+				</A>
 			&nbsp;
 			</span>
 			
@@ -451,22 +452,22 @@
 	  </div>
 
 	  <div v-bind:class="{ 'tab-pane': true, active: tab === 'search' }" id="search">
-		  <div class=searchResults v-if="searchResults && Object.keys(searchResults).length > 1">
+		  <div Xclass=searchResults v-if="searchResults && Object.keys(searchResults).length > 1">
 			  <HR>Search results: <BR>
-			  <div v-for="(matches, key, index) in searchResults">
-				<div v-if="key !== 'keyword'">
-					<BR>
-					{{ matches && matches.length ? matches.length : 'no' }} results in <b>{{key}}</b><BR>
-					<div v-if="matches && matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;" :dir="key === 'arabic' || key === 'arabicBuckTranslit' ? 'rtl' : 'ltr'">
-						<div v-for="match in matches">
-							<!-- {{match}} -->
-							<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
-								{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
-							</A>
-							{{ key === 'arabic' || key === 'arabicBuckTranslit' ? qUtil.EnToAr( match.split('|')[2] ) : match.split('|')[2] }}
-						</div>
+			  {{searchResults.matchesCount}} matches found searching for: {{searchResults.keyword}}<BR><BR>
+
+			  <!-- <div v-for="(matches, key, index) in searchResults"> -->
+			  <div v-for="result in searchResults.results">
+			  	{{ result.matches.length }} matches found searching for: {{ result.keyword }} in: {{result.category}} category:
+
+				<div class=searchResults v-if="result.matches && result.matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;" :dir="result.category.indexOf( 'Arabic' ) != -1 ? 'rtl' : 'ltr'">
+					<div v-for="match in result.matches">
+						<!-- {{match}} -->
+						<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
+							{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
+						</A>
+						{{ result.category.indexOf( 'Arabic' ) != -1 ? qUtil.EnToAr( match.split('|')[2] ) : match.split('|')[2] }}
 					</div>
-					<BR>
 				</div>
 			  </div>
 			  <HR>
