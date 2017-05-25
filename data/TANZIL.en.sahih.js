@@ -1,4 +1,4 @@
-fnJsonCallbackTRANS( "1|1|In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\
+define([], function(){ return /*fnJsonCallbackTRANS(*/ "1|1|In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\
 1|2|[All] praise is [due] to Allah, Lord of the worlds -\n\
 1|3|The Entirely Merciful, the Especially Merciful,\n\
 1|4|Sovereign of the Day of Recompense.\n\
@@ -6246,4 +6246,4 @@ fnJsonCallbackTRANS( "1|1|In the name of Allah, the Entirely Merciful, the Espec
 #  Source: Tanzil.info\n\
 #\n\
 #=====================================================================\n\
-");
+"/*)*/; });

@@ -3,35 +3,48 @@ require.config({
     "jquery": 'lib/jquery.min', //"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
     							//'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min',
     "underscore": 'lib/lodash.min', //"lib/underscore",
-    							//https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min
+    							//"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min"
     "bootstrap": "libcss/bootstrap-3.3.7-dist/js/bootstrap.min", 
     							//"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    "vue": 'lib/vue',			//https://unpkg.com/vue/dist/vue
-
+    "vue": location.origin !== "http://localhost:8080" ? 'lib/vue.min' : 'lib/vue',
+    							//"https://unpkg.com/vue/dist/vue"
+    "vue-router": 'lib/vue-router',			
+    							//"https://unpkg.com/vue-router/dist/vue-router.js" or specific version one:
+    							//"https://unpkg.com/vue-router@2.0.0/dist/vue-router.js."
     "moment": 'lib/moment.min',
 
     "jqueryMark": 'lib/jquery.mark.min',
-    							//http://www.jsdelivr.com/projects/mark
-    							//https://cdnjs.com/libraries/mark
+    							//"http://www.jsdelivr.com/projects/mark"
+    							//"https://cdnjs.com/libraries/mark"
+    "vue-awesome": 'lib/vue-awesome', //see: https://github.com/Justineo/vue-awesome
+
+    //module code file paths							
     "qMain": 'lib/modules/qMain',
     "Q": 'lib/modules/Q', 
+	"qUtil": 'lib/modules/qUtil',
+	"qSearch": 'lib/modules/qSearch.1.0',
+
     "qAsbab": 'lib/modules/qAsbab', 
+	"qSynonyms": 'lib/modules/qSynonyms',
     "qCorpus": 'lib/modules/qCorpus.0.4',
-    "qRoot": 'lib/modules/qRoot',
     "qRootLemDict": 'lib/modules/qRootLemDict',
     "qRootMeanings": 'lib/modules/qRootMeanings',
-	"qSearch": 'lib/modules/qSearch.1.0',
-	"qSynonyms": 'lib/modules/qSynonyms',
-	"qUtil": 'lib/modules/qUtil',
+
+    "qRoot": 'lib/modules/qRoot',
 	"qSarf": 'lib/modules/qSarf',
 	"qAntonyms": 'lib/modules/qAntonyms',
 
+
 	//data files paths
+	"qBuck": 'data/qBuckFull',
+	"qTrans": 'data/TANZIL.en.sahih',
+	"qTranslit": 'data/TANZIL.en.transliteration',
+
 	"asbabDATA": 'data/asbabDATA',
 	"synonymsDATA": 'data/synonymsDATA',
-	"manzil1,7": 'data/manzil1,7',
-	"manzil2,3,4": 'data/manzil2,3,4',
-	"manzil5,6": 'manzil5,6',
+	"qCorpus1": 'data/manzil1,7',
+	"qCorpus2": 'data/manzil2,3,4',
+	"qCorpus3": 'data/manzil5,6',
 
   }
 });
@@ -39,30 +52,47 @@ require.config({
 
 	var _dependencies = [
 					 'vue', 'qMain'
-					,'jquery', 'jqueryMark', 'moment'
-					,'Q' ,'qUtil' ,'qCorpus'
-					,'qAsbab' ,'qSynonyms'
+					,'underscore' ,'jquery', 'jqueryMark', 'moment'
+					,'Q' ,'qUtil' 
+					,'qSearch'
+					//,'qCorpus'
+					//,'qAsbab' ,'qSynonyms'
 					
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
-					, 'qSarf', 'qAntonyms'
+					//, 'qRoot', 'qRootLemDict', 'qRootMeanings', 'qSearch'
+					//, 'qSarf', 'qAntonyms'
 		];
 
 	require(_dependencies, function( 
 					Vue, qMain
-					,$, jqueryMark, moment
-					,Q ,qUtil ,qCorpus 
-					,qAsbab ,qSynonyms
+					,_ ,$, jqueryMark, moment
+					,Q ,qUtil 
+					,qSearch
+					//,qCorpus 
+					//,qAsbab ,qSynonyms
 
 					//below ones not really dependencies of this module; just adding for temporary debugging purpose
-					,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
-					,qSarf ,qAntonyms
+					//,qRoot ,qRootLemDict ,qRootMeanings ,qSearch
+					//,qSarf ,qAntonyms
 		){
 	var vm;
 
 	initializeVueComponents(Vue);
 
 	vm = initializeVM();
+
+	vm._ = _;
+	vm.qUtil = qUtil;
+	vm.suras = _.chain( _.range(1, 115) )
+				.map( function(s){
+					var det = Q.surah.detail( s );
+					return _.extend( det, { 
+						name: s + '. ' + det.english_name +'  '+ det.arabic_name,
+						value: s
+					} );
+				 })
+				.value() || [];
+	//vm.qCorpus = qCorpus; //dont load until needed
 	
 
 	/* BEGIN: THIS BLOCK IS FOR DEBUGGING; remove once all stable */
@@ -89,22 +119,9 @@ require.config({
 				vm.isLoading = false;
 				//vm && vm.go();
 				
-				vm.suras = _.chain( _.range(1, 115) )
-							.map( function(s){
-								var det = Q.surah.detail( s );
-								return _.extend( det, { 
-									name: s + '. ' + det.english_name +'  '+ det.arabic_name,
-									value: s
-								} );
-							 })
-							.value() || [];
-				vm.qUtil = qUtil;
-				vm.qCorpus = qCorpus;
 				vm.goPage(1);
 			});
 			if(vm){
-				vm._ = _;
-				vm.suras = [];
 				
 				onChangeSura = function(vm){
 					vm.queryData.page = Q.ayah.page(vm.queryData.sura, vm.queryData.ayah ? vm.queryData.ayah : 1);
@@ -166,7 +183,7 @@ require.config({
 						verseEx.AR = qUtil.EnToAr( verseEx.BUCK );
 						verseEx.BARE = qUtil.BuckToBare( verseEx.BUCK );
 
-						verse = _.extend(verse, {isBasmallah: isBasmallah}, verseEx );
+						verse = _.extend(verse, {isBasmallah: isBasmallah, isHighlighted: false, isSelected: false}, verseEx );
 					});
 
 					//now find out if any Asbab for this page as an async call
@@ -186,10 +203,47 @@ require.config({
 					
 				}
 				
-				vm.goSearchResult = function(match){ //single string like this 5|12|sdfsfs fsdfsdfs
-					var tmp = match ? match.split('|') : ['-', '-', '-'];
-					vm.keyword = tmp[0] +':'+ tmp[1]+':'+1;
-					vm.go();
+				vm.goSearchResult = function(match, result){ //single string like this 5|12|sdfsfs fsdfsdfs
+					var tmp = match ? match.split('|') : ['-', '-', '-'],
+						loc = {
+								sura: +tmp[0],
+								ayah: +tmp[1],
+								word: +tmp[2]
+						},
+						pageNo = Q.ayah.page(loc.sura, loc.ayah),
+						keyword = result.keyword,
+						category = result.category,
+						count = result.matches.length,
+						hilites = [ keyword ];
+					vm.goPage( pageNo );
+					
+
+					//first un-highlight all ayahs on page
+					//vm.ayahsListFromPage.forEach(function(v){
+					//	console.log(v.isHighlighted = false);
+					//});
+
+					//also highlight that ayah on the page
+					var verse = _.find( vm.ayahsListFromPage, {surah: loc.sura, ayah: loc.ayah});
+					verse && (verse.isHighlighted = true);
+
+
+					setTimeout(function(){
+						// and bring that ayah into view (scrollIntoview)
+						$('.aya.highlight').length > 0 && typeof( $('.aya.highlight')[0].scrollIntoView ) != 'undefined'
+							&& $('.aya.highlight')[0].scrollIntoView();
+
+						// and finally hilite the search keyword on that Quran page
+					}, 0);
+
+
+					//clear out old keywords and set new ones.
+					 $('.quranpage').unmark({ "done": function(){
+					 										$('.quranpage').mark( hilites );
+					 							 }
+					 });
+
+
 				}
 				
 				vm.goRootToLem = function(match, key, index){
@@ -291,9 +345,9 @@ require.config({
 						setTimeout(function(){
 							var hilites = [];
 							hilites.push( vm.searchResults.keyword );
-							hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
-							hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) );
-							hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) );
+							//hilites.push( qUtil.BuckToBare(vm.searchResults.keyword) );
+							hilites.push( qUtil.EnToAr( vm.searchResults.keyword ) ); //TODO: conditionally do this
+							hilites.push( qUtil.EnToAr( qUtil.BuckToBare(vm.searchResults.keyword) ) ); //TODO: conditionally do this
 
 							//clear out old keywords and set new ones.
 							$('.searchResults').unmark({ "done": function(){
@@ -379,7 +433,7 @@ require.config({
 				alert('Thanks for the email, we\'ll be in touch promptly.');
 				return false;
 			}
-			if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
+			//if(typeof(qSearch)!= 'undefined'){ qSearch.initCorpus() };
 		}
 
 	}
