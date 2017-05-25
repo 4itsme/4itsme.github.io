@@ -463,7 +463,7 @@
 				<div class=searchResults v-if="result.matches && result.matches.length" style="overflow:scroll; max-height:200px; white-space: nowrap;" :dir="result.category.indexOf( 'Arabic' ) != -1 ? 'rtl' : 'ltr'">
 					<div v-for="match in result.matches">
 						<!-- {{match}} -->
-						<A href=# @click='goSearchResult(match);' v-bind:title='match.verse'>
+						<A href=# @click='goSearchResult(match, result);' v-bind:title='match.verse'>
 							{{ match.split('|')[0] }}:{{ match.split('|')[1] }}
 						</A>
 						{{ result.category.indexOf( 'Arabic' ) != -1 ? qUtil.EnToAr( match.split('|')[2] ) : match.split('|')[2] }}

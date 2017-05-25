@@ -200,14 +200,18 @@ require.config({
 					
 				}
 				
-				vm.goSearchResult = function(match){ //single string like this 5|12|sdfsfs fsdfsdfs
+				vm.goSearchResult = function(match, result){ //single string like this 5|12|sdfsfs fsdfsdfs
 					var tmp = match ? match.split('|') : ['-', '-', '-'],
 						loc = {
 								sura: +tmp[0],
 								ayah: +tmp[1],
 								word: +tmp[2]
 						},
-						pageNo = Q.ayah.page(loc.sura, loc.ayah);
+						pageNo = Q.ayah.page(loc.sura, loc.ayah),
+						keyword = result.keyword,
+						category = result.category,
+						count = result.matches.length,
+						hilites = [ keyword ];
 					vm.goPage( pageNo );
 					
 
@@ -231,10 +235,10 @@ require.config({
 
 
 					//clear out old keywords and set new ones.
-					// $('.searchResults').unmark({ "done": function(){
-					// 										$('.searchResults').mark( hilites );
-					// 							 }
-					// });
+					 $('.quranpage').unmark({ "done": function(){
+					 										$('.quranpage').mark( hilites );
+					 							 }
+					 });
 
 
 				}
