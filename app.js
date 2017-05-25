@@ -6,8 +6,11 @@ require.config({
     							//"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min"
     "bootstrap": "libcss/bootstrap-3.3.7-dist/js/bootstrap.min", 
     							//"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    "vue": 'lib/vue',			//"https://unpkg.com/vue/dist/vue"
-
+    "vue": location.origin !== "http://localhost:8080" ? 'lib/vue.min' : 'lib/vue',
+    							//"https://unpkg.com/vue/dist/vue"
+    "vue-router": 'lib/vue-router',			
+    							//"https://unpkg.com/vue-router/dist/vue-router.js" or specific version one:
+    							//"https://unpkg.com/vue-router@2.0.0/dist/vue-router.js."
     "moment": 'lib/moment.min',
 
     "jqueryMark": 'lib/jquery.mark.min',
